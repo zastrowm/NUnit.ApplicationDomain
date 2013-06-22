@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+    <metadata>
+        <id>NUnit.ApplicationDomain</id>
+        <version>1.0.0</version>
+        <title />
+        <authors>Mackenzie Zastrow</authors>
+        <owners />
+        <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+        <projectUrl>https://bitbucket.org/zastrowm/nunit.applicationdomain/</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>My package description.</description>
+        <summary>Allows running NUnit tests in a separate application domain.</summary>
+        <copyright>2013 Mackenzie Zastrow</copyright>
+        <tags>nunit, appdomain</tags>
+        <dependencies>
+            <group targetFramework=".NETFramework4.0">
+                <dependency id="NUnit" version="2.6.2" />
+            </group>
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="NUnit.ApplicationDomain\bin\Release\NUnit.ApplicationDomain.dll" target="lib\net40\NUnit.ApplicationDomain.dll" />
+        <file src="NUnit.ApplicationDomain\bin\Release\NUnit.ApplicationDomain.XML" target="lib\net40\NUnit.ApplicationDomain.XML" />
+    </files>
+</package>
