@@ -20,14 +20,27 @@ namespace NUnit.ApplicationDomain
         throw new ArgumentNullException("method");
 
       string fullName = method.DeclaringType.FullName + "," + method.DeclaringType.Assembly.GetName().Name;
-      return new TestMethodInformation(fullName, method.Name);
+      string configFile = FindConfigFile(Assembly.GetAssembly(method.DeclaringType));
+
+      return new TestMethodInformation(fullName, method.Name, configFile);
+    }
+
+    /// <summary> Try to get the AppConfig file for the assembly. </summary>
+    /// <param name="assembly"> The assembly whose app config file should be retrieved. </param>
+    /// <returns> The path to the config file, or null if it does not exist. </returns>
+    private static string FindConfigFile(Assembly assembly)
+    {
+      string configFile = assembly.Location + ".config";
+      return File.Exists(configFile) ? configFile : null;
     }
 
     /// <summary> Constructor. </summary>
-    /// <param name="className">	The name of the class that contains the method to run in the
+    /// <exception cref="ArgumentNullException">  When one or more required arguments are null. </exception>
+    /// <param name="className">  The name of the class that contains the method to run in the
     ///  application domain. </param>
     /// <param name="methodName"> Name of the method to run. </param>
-    public TestMethodInformation(string className, string methodName)
+    /// <param name="appConfigFile"> The config file for the method. </param>
+    public TestMethodInformation(string className, string methodName, string appConfigFile)
     {
       if (className == null)
         throw new ArgumentNullException("className");
@@ -36,15 +49,21 @@ namespace NUnit.ApplicationDomain
 
       TypeName = className;
       TestName = methodName;
+      AppConfigFile = appConfigFile;
       OutputStream = Console.Out;
       ErrorStream = Console.Error;
     }
 
-    /// <summary> The name of the class that contains the method to run in the application domain. </summary>
+    /// <summary>
+    ///  The name of the class that contains the method to run in the application domain.
+    /// </summary>
     public string TypeName { get; set; }
 
     /// <summary> Gets or sets the name of the test. </summary>
     public string TestName { get; private set; }
+
+    /// <summary> The app config file for the test. </summary>
+    public string AppConfigFile { get; set; }
 
     /// <summary> System.Out. </summary>
     public TextWriter OutputStream { get; private set; }

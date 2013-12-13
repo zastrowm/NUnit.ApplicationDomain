@@ -151,3 +151,4 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 packages/*
+NUnit.ApplicationDomain.*
