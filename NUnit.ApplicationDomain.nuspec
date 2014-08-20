@@ -2,13 +2,19 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>NUnit.ApplicationDomain</id>
-        <version>1.0.2</version>
+        <version>1.0.3</version>
+        <title>NUnit Application Domain Runner</title>
         <authors>Mackenzie Zastrow</authors>
         <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
         <projectUrl>https://bitbucket.org/zastrowm/nunit.applicationdomain/</projectUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Run NUnit tests in a separate application domain.</description>
         <summary>Allows running NUnit tests in a separate application domain.</summary>
+        <releaseNotes>## Version 1.0.3
+Added support for abstract classes
+
+## Version 1.0.1
+Initial Release</releaseNotes>
         <copyright>2013 Mackenzie Zastrow</copyright>
         <tags>nunit, appdomain</tags>
         <dependencies>

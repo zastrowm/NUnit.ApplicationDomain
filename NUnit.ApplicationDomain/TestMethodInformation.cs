@@ -11,16 +11,18 @@ namespace NUnit.ApplicationDomain
   public class TestMethodInformation : MarshalByRefObject
   {
     /// <summary> Creates a test method information from a MethodINfo object. </summary>
-    /// <exception cref="ArgumentNullException">  When one or more required arguments are null. </exception>
+    /// <exception cref="ArgumentNullException"> When one or more required arguments are null. </exception>
+    /// <param name="type"> The type that should be instantiated in order to run the test
+    ///  in the application domain. </param>
     /// <param name="method"> The method. </param>
     /// <returns> The new test method information. </returns>
-    public static TestMethodInformation CreateTestMethodInformation(MethodBase method)
+    public static TestMethodInformation CreateTestMethodInformation(Type type, MethodBase method)
     {
       if (method == null || method.DeclaringType == null)
         throw new ArgumentNullException("method");
 
-      string fullName = method.DeclaringType.FullName + "," + method.DeclaringType.Assembly.GetName().Name;
-      string configFile = FindConfigFile(Assembly.GetAssembly(method.DeclaringType));
+      string fullName = type.FullName + "," + type.Assembly.GetName().Name;
+      string configFile = FindConfigFile(Assembly.GetAssembly(type));
 
       return new TestMethodInformation(fullName, method.Name, configFile);
     }

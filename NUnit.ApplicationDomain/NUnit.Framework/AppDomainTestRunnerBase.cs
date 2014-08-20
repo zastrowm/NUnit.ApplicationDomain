@@ -28,9 +28,9 @@ namespace NUnit.Framework
     ///   {
     ///     if (RunInDomain())
     ///       return;
-    ///       
+    ///
     ///     // ... app domain specific testing ...
-    ///   }         
+    ///   }
     /// </example>
     public void RunInDomain(string appDomain = DefaultAppDomainName)
     {
@@ -44,7 +44,8 @@ namespace NUnit.Framework
 
       // get the current method from the stack trace
       MethodBase testMethod = stackTrace.GetFrame(1).GetMethod();
-      TestMethodInformation args = TestMethodInformation.CreateTestMethodInformation(testMethod);
+      TestMethodInformation args = TestMethodInformation.CreateTestMethodInformation(testMethod.DeclaringType,
+                                                                                     testMethod);
 
       var exception = AppDomainRunner.Run(appDomain, testMethod.DeclaringType.Assembly, args);
 

@@ -39,10 +39,14 @@ namespace NUnit.Framework
       if (AppDomain.CurrentDomain.FriendlyName == Name)
         return;
 
+      var testClassType = testDetails.Fixture != null
+        ? testDetails.Fixture.GetType()
+        : testDetails.Method.DeclaringType;
+
       Exception exception = AppDomainRunner.Run(
         Name,
         testDetails.Method.DeclaringType.Assembly,
-        TestMethodInformation.CreateTestMethodInformation(testDetails.Method));
+        TestMethodInformation.CreateTestMethodInformation(testClassType, testDetails.Method));
 
       if (exception == null)
       {
