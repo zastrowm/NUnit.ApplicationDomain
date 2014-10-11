@@ -24,19 +24,22 @@ namespace NUnit.ApplicationDomain
       var info = new AppDomainSetup();
 
       //set the path to the assembly to load.
-      info.ApplicationBase = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath);
+      info.ApplicationBase = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().EscapedCodeBase).LocalPath);
 
       if (!string.IsNullOrEmpty(args.AppConfigFile))
       {
         info.ConfigurationFile = args.AppConfigFile;
       }
 
-      AppDomain domain = AppDomain.CreateDomain(testDomainName, null, info, GetPermissionSet());
+      AppDomain domain = AppDomain.CreateDomain(testDomainName,
+                                                null,
+                                                info,
+                                                GetPermissionSet());
       domain.Load(assembly.GetName());
 
       var instance = (InDomainRunner) domain.CreateInstanceAndUnwrap(
-        typeof (InDomainRunner).Assembly.FullName,
-        typeof (InDomainRunner).FullName);
+        typeof(InDomainRunner).Assembly.FullName,
+        typeof(InDomainRunner).FullName);
 
       Exception exception = instance.Execute(args);
 
