@@ -3,18 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnit.ApplicationDomain", "NUnit.ApplicationDomain\NUnit.ApplicationDomain.csproj", "{40D16269-10EE-41B6-A009-8642E293A7E1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnit.ApplicationDomain", "src\NUnit.ApplicationDomain\NUnit.ApplicationDomain.csproj", "{40D16269-10EE-41B6-A009-8642E293A7E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnit.ApplicationDomain.Tests", "NUnit.ApplicationDomain.Tests\NUnit.ApplicationDomain.Tests.csproj", "{0253CFB4-02A8-46A6-A61F-F7F34129F08A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnit.ApplicationDomain.Tests", "test\NUnit.ApplicationDomain.Tests\NUnit.ApplicationDomain.Tests.csproj", "{0253CFB4-02A8-46A6-A61F-F7F34129F08A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{0A0F2D30-E365-49CD-8F46-C975257F8468}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnit.ApplicationDomain.Tests.Hash", "C#\HashInNameTests\NUnit.ApplicationDomain.Tests.Hash.csproj", "{3CB7F4B6-D1F0-4691-9648-313E6B7768F2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnit.ApplicationDomain.Tests.#", "test\NUnit.ApplicationDomain.Tests.#\NUnit.ApplicationDomain.Tests.#.csproj", "{3CB7F4B6-D1F0-4691-9648-313E6B7768F2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

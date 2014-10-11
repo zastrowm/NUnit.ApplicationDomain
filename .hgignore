@@ -152,3 +152,4 @@ ehthumbs.db
 Desktop.ini
 packages/*
 NUnit.ApplicationDomain.*
+NuGet.exe
