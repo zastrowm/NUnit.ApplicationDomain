@@ -131,6 +131,9 @@ Backup*/
 UpgradeLog*.XML
 UpgradeLog*.htm
 
+## NuGet
+packages/
+
 ## Miscellaneous Ignores
 
 sql/
@@ -150,6 +153,5 @@ $RECYCLE.BIN/
 Thumbs.db
 ehthumbs.db
 Desktop.ini
-packages/*
-NUnit.ApplicationDomain.*
+*.nupkg
 NuGet.exe
