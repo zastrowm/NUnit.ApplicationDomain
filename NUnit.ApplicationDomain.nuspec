@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>NUnit.ApplicationDomain</id>
-        <version>2.0.0</version>
+        <version>2.0.1</version>
         <title>NUnit Application Domain Runner</title>
         <authors>Mackenzie Zastrow</authors>
         <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
@@ -19,11 +19,11 @@ Added support for abstract classes
 
 ## Version 1.0.1
 Initial Release</releaseNotes>
-        <copyright>2013 Mackenzie Zastrow</copyright>
+        <copyright>2014 Mackenzie Zastrow</copyright>
         <tags>nunit, appdomain</tags>
         <dependencies>
             <group targetFramework=".NETFramework4.0">
-                <dependency id="NUnit" version="2.6.2" />
+                <dependency id="NUnit" version="2.6.3" />
             </group>
         </dependencies>
     </metadata>
