@@ -11,6 +11,7 @@ namespace NUnit.ApplicationDomain.Tests
     [SetUp]
     public void Setup()
     {
+      Console.WriteLine("Setup Running...");
       StaticInformation.Count++;
     }
 
@@ -30,6 +31,12 @@ namespace NUnit.ApplicationDomain.Tests
       Assert.AreEqual(14, StaticInformation.Count);
       // if we weren't in a separate app domain, the next test would fail:
       StaticInformation.Count++;
+    }
+
+    [TearDown]
+    public void Teardown()
+    {
+      Console.WriteLine("Teardown called");
     }
   }
 

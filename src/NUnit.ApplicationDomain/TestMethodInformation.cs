@@ -10,7 +10,7 @@ namespace NUnit.ApplicationDomain
   /// <summary> All of the arguments for the TestExecutor. </summary>
   public class TestMethodInformation : MarshalByRefObject
   {
-    /// <summary> Creates a test method information from a MethodINfo object. </summary>
+    /// <summary> Creates a test method information from a MethodInfo object. </summary>
     /// <exception cref="ArgumentNullException"> When one or more required arguments are null. </exception>
     /// <param name="type"> The type that should be instantiated in order to run the test
     ///  in the application domain. </param>

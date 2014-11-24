@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="AbstractClassesWork.cs" />
     <Compile Include="AppDomainTestRunnerBaseTests.cs" />
+    <Compile Include="MultipleSetupAndTeardownTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RunInAppDomainAttributeTests.cs" />
   </ItemGroup>

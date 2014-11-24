@@ -15,20 +15,20 @@ namespace NUnit.ApplicationDomain
     /// <summary> Runs a test in another application domain. </summary>
     /// <param name="testDomainName"> The name to assign to the application domain. </param>
     /// <param name="assembly"> The assembly that contains the test to run. </param>
-    /// <param name="args"> The arguments to pass to the runner inside the application domain. </param>
+    /// <param name="testMethodInfo"> The arguments to pass to the runner inside the application domain. </param>
     /// <returns> The exception that occurred in the test, or null if no exception occurred. </returns>
-    public static Exception Run(string testDomainName, Assembly assembly, TestMethodInformation args)
+    public static Exception Run(string testDomainName, Assembly assembly, TestMethodInformation testMethodInfo)
     {
-      Verify(assembly, args);
+      Verify(assembly, testMethodInfo);
 
       var info = new AppDomainSetup();
 
       //set the path to the assembly to load.
       info.ApplicationBase = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().EscapedCodeBase).LocalPath);
 
-      if (!string.IsNullOrEmpty(args.AppConfigFile))
+      if (!string.IsNullOrEmpty(testMethodInfo.AppConfigFile))
       {
-        info.ConfigurationFile = args.AppConfigFile;
+        info.ConfigurationFile = testMethodInfo.AppConfigFile;
       }
 
       AppDomain domain = AppDomain.CreateDomain(testDomainName,
@@ -41,7 +41,7 @@ namespace NUnit.ApplicationDomain
         typeof(InDomainRunner).Assembly.FullName,
         typeof(InDomainRunner).FullName);
 
-      Exception exception = instance.Execute(args);
+      Exception exception = instance.Execute(testMethodInfo);
 
       if (exception != null)
       {
@@ -57,6 +57,7 @@ namespace NUnit.ApplicationDomain
     private static void Verify(Assembly assembly, TestMethodInformation args)
     {
       Type type = Type.GetType(args.TypeName);
+
       if (!type.IsPublic)
         throw new InvalidOperationException("Class under test must be declared as public");
     }
