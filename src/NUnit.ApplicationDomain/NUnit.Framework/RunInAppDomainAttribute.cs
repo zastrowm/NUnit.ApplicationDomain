@@ -38,7 +38,7 @@ namespace NUnit.Framework
         ? testDetails.Fixture.GetType()
         : testDetails.Method.DeclaringType;
 
-      Exception exception = ApplicationDomain.AppDomainRunner.Run(
+      Exception exception = AppDomainRunner.Run(
         Name,
         testClassType.Assembly,
         TestMethodInformation.CreateTestMethodInformation(testClassType, testDetails.Method));
@@ -50,11 +50,11 @@ namespace NUnit.Framework
 
       if (exception is AssertionException)
       {
-        Console.WriteLine("Assert failed in Application Domain");
+        Console.Error.WriteLine("\nAssertion failed in Application Domain");
       }
       else
       {
-        Console.WriteLine("Exception thrown in application domain");
+        Console.Error.WriteLine("\nException thrown in application domain");
       }
 
       throw exception;

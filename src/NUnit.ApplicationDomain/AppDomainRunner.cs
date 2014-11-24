@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Security;
 using System.Security.Policy;
+using NUnit.Framework;
 
 namespace NUnit.ApplicationDomain
 {
@@ -47,6 +48,7 @@ namespace NUnit.ApplicationDomain
         typeof(InDomainRunner).FullName);
 
       Exception exception = instance.Execute(testMethodInfo);
+
 
       if (exception != null)
       {

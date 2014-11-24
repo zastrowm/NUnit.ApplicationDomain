@@ -7,14 +7,16 @@ namespace NUnit.ApplicationDomain.Tests
 {
   public abstract class MultipleSetupAndTeardownTestsBase
   {
+    public const int StartValue = 9;
+    public static int Index = StartValue;
+
     [SetUp]
     public void Setup()
     {
       if (!AppDomainRunner.IsInTestAppDomain)
         return;
 
-      Console.WriteLine("(base) Setup Running...");
-      StaticInformation.Count++;
+      Verify("Base Setup", 1);
     }
 
     [TearDown]
@@ -23,7 +25,15 @@ namespace NUnit.ApplicationDomain.Tests
       if (!AppDomainRunner.IsInTestAppDomain)
         return;
 
-      Console.WriteLine("(base) Teardown called");
+      Verify("Base Teardown", 5);
+    }
+
+    protected void Verify(string text, int expectedIncrement)
+    {
+      Console.WriteLine(text);
+
+      Index++;
+      Assert.AreEqual(StartValue + expectedIncrement, Index);
     }
   }
 
@@ -36,15 +46,14 @@ namespace NUnit.ApplicationDomain.Tests
       if (!AppDomainRunner.IsInTestAppDomain)
         return;
 
-      Console.WriteLine("(derived) Setup Running...");
-      StaticInformation.Count++;
+      Verify("Derived Setup", 2);
     }
 
-    [Test, Explicit("User needs to manually identify if it worked")]
+    [Test]
     [Description("Test method")]
     public void Test_method()
     {
-      Console.WriteLine("Test method");
+      Verify("Test Method", 3);
     }
 
     [TearDown]
@@ -53,7 +62,7 @@ namespace NUnit.ApplicationDomain.Tests
       if (!AppDomainRunner.IsInTestAppDomain)
         return;
 
-      Console.WriteLine("(derived) Teardown called");
+      Verify("Derived Teardown", 4);
     }
   }
 }
