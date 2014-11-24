@@ -92,8 +92,13 @@ namespace NUnit.ApplicationDomain
 
       while (typeUnderTest != null)
       {
+        const BindingFlags searchFlags = BindingFlags.DeclaredOnly
+                                         | BindingFlags.Instance
+                                         | BindingFlags.Public
+                                         | BindingFlags.NonPublic;
+
         // get only methods that do not have any parameters and have exactly one Setup method
-        var methodsOnCurrentType = from method in typeUnderTest.GetMethods()
+        var methodsOnCurrentType = from method in typeUnderTest.GetMethods(searchFlags)
                                    where method.GetParameters().Length == 0
                                    let setupAttribute = (T[]) method.GetCustomAttributes(typeof(T), false)
                                    where setupAttribute.Length == 1
