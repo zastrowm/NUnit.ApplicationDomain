@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Reflection;
-using System.Text;
 using System.Linq;
 using System.Collections.Generic;
 using System;
@@ -8,7 +7,7 @@ using System;
 namespace NUnit.ApplicationDomain
 {
   /// <summary> All of the arguments for the TestExecutor. </summary>
-  public class TestMethodInformation : MarshalByRefObject
+  internal class TestMethodInformation : MarshalByRefObject
   {
     /// <summary> Creates a test method information from a MethodInfo object. </summary>
     /// <exception cref="ArgumentNullException"> When one or more required arguments are null. </exception>

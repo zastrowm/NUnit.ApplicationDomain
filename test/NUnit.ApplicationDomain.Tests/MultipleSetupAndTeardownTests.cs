@@ -10,6 +10,9 @@ namespace NUnit.ApplicationDomain.Tests
     [SetUp]
     public void Setup()
     {
+      if (!AppDomainRunner.IsInTestAppDomain)
+        return;
+
       Console.WriteLine("(base) Setup Running...");
       StaticInformation.Count++;
     }
@@ -17,6 +20,9 @@ namespace NUnit.ApplicationDomain.Tests
     [TearDown]
     public void Teardown()
     {
+      if (!AppDomainRunner.IsInTestAppDomain)
+        return;
+
       Console.WriteLine("(base) Teardown called");
     }
   }
@@ -27,6 +33,9 @@ namespace NUnit.ApplicationDomain.Tests
     [SetUp]
     public void Setup()
     {
+      if (!AppDomainRunner.IsInTestAppDomain)
+        return;
+
       Console.WriteLine("(derived) Setup Running...");
       StaticInformation.Count++;
     }
@@ -41,6 +50,9 @@ namespace NUnit.ApplicationDomain.Tests
     [TearDown]
     public void Teardown()
     {
+      if (!AppDomainRunner.IsInTestAppDomain)
+        return;
+
       Console.WriteLine("(derived) Teardown called");
     }
   }

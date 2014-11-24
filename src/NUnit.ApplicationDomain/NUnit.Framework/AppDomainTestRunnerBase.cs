@@ -32,6 +32,7 @@ namespace NUnit.Framework
     ///     // ... app domain specific testing ...
     ///   }
     /// </example>
+    [Obsolete("Use RunInAppDomainAttribute instead")]
     public void RunInDomain(string appDomain = DefaultAppDomainName)
     {
       if (appDomain == null)
@@ -47,7 +48,7 @@ namespace NUnit.Framework
       TestMethodInformation args = TestMethodInformation.CreateTestMethodInformation(testMethod.DeclaringType,
                                                                                      testMethod);
 
-      var exception = AppDomainRunner.Run(appDomain, testMethod.DeclaringType.Assembly, args);
+      var exception = ApplicationDomain.AppDomainRunner.Run(appDomain, testMethod.DeclaringType.Assembly, args);
 
       if (exception == null)
       {

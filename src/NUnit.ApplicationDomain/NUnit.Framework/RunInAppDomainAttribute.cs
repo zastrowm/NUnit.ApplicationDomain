@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using NUnit.ApplicationDomain;
-using NUnit.Framework;
 
 namespace NUnit.Framework
 {
@@ -17,13 +14,11 @@ namespace NUnit.Framework
 
     /// <summary> Constructor. </summary>
     public RunInApplicationDomainAttribute()
-      : this(null)
-    {
-    }
+      : this(null) {}
 
     /// <summary> Constructor. </summary>
-    /// <param name="name"> (Optional) The name to give to the application domain in which the test
-    ///  should be run. </param>
+    /// <param name="name"> The name to give to the application domain in which the test should be run. </param>
+    [Obsolete("Use the parameter-less constructor overload")]
     public RunInApplicationDomainAttribute(string name)
     {
       Name = name ?? AppDomainTestRunnerBase.DefaultAppDomainName;
@@ -43,7 +38,7 @@ namespace NUnit.Framework
         ? testDetails.Fixture.GetType()
         : testDetails.Method.DeclaringType;
 
-      Exception exception = AppDomainRunner.Run(
+      Exception exception = ApplicationDomain.AppDomainRunner.Run(
         Name,
         testClassType.Assembly,
         TestMethodInformation.CreateTestMethodInformation(testClassType, testDetails.Method));
@@ -71,6 +66,7 @@ namespace NUnit.Framework
     /// <param name="testDetails">Provides details about the test that has just been run.</param>
     public void AfterTest(TestDetails testDetails)
     {
+
     }
 
     /// <summary>

@@ -58,6 +58,9 @@ namespace NUnit.ApplicationDomain
 
       try
       {
+        // mark this test as being in the app domain
+        AppDomainRunner.IsInTestAppDomain = true;
+
         foreach (var setupMethod in setupMethods)
         {
           setupMethod.Invoke(instance, null);

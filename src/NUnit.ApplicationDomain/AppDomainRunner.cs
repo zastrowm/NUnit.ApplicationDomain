@@ -5,19 +5,24 @@ using System.Linq;
 using System.Reflection;
 using System.Security;
 using System.Security.Policy;
-using System.Text;
 
 namespace NUnit.ApplicationDomain
 {
   /// <summary> Helps to run a test in another application domain. </summary>
   public static class AppDomainRunner
   {
+    /// <summary>
+    ///  Returns true if the current test is being executed in an application domain created by the
+    ///  <typeparamref name="NUnit.Framework.RunInAppDomainAttribute"/>.
+    /// </summary>
+    public static bool IsInTestAppDomain { get; internal set; }
+
     /// <summary> Runs a test in another application domain. </summary>
     /// <param name="testDomainName"> The name to assign to the application domain. </param>
     /// <param name="assembly"> The assembly that contains the test to run. </param>
     /// <param name="testMethodInfo"> The arguments to pass to the runner inside the application domain. </param>
     /// <returns> The exception that occurred in the test, or null if no exception occurred. </returns>
-    public static Exception Run(string testDomainName, Assembly assembly, TestMethodInformation testMethodInfo)
+    internal static Exception Run(string testDomainName, Assembly assembly, TestMethodInformation testMethodInfo)
     {
       Verify(assembly, testMethodInfo);
 
