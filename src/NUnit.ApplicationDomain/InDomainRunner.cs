@@ -24,14 +24,15 @@ namespace NUnit.ApplicationDomain
         throw new ArgumentException("ClassName did not point to a valid type", "args");
 
       // get all of the setup methods in the type
-      var setupMethods = GetMethodsWithAttributes<SetUpAttribute>(typeUnderTest);
-
-      var teardownMethods = GetMethodsWithAttributes<TearDownAttribute>(typeUnderTest);
+      var setupMethods = GetMethodsWithAttributes<TestFixtureSetUpAttribute>(typeUnderTest);
+      setupMethods.AddRange(GetMethodsWithAttributes<SetUpAttribute>(typeUnderTest));
 
       // we want most-derived last
       setupMethods.Reverse();
 
-      // teardown is already the way we want it.
+      // get all of the teardown methods in the type (it is already the way we want it).
+      var teardownMethods = GetMethodsWithAttributes<TestFixtureTearDownAttribute>(typeUnderTest);
+      teardownMethods.AddRange(GetMethodsWithAttributes<TearDownAttribute>(typeUnderTest));
 
       var testMethod = typeUnderTest.GetMethod(args.TestName);
 
@@ -68,9 +69,9 @@ namespace NUnit.ApplicationDomain
 
         testMethod.Invoke(instance, null);
 
-        foreach (var setupMethod in teardownMethods)
+        foreach (var teardownMethod in teardownMethods)
         {
-          setupMethod.Invoke(instance, null);
+          teardownMethod.Invoke(instance, null);
         }
       }
       catch (TargetInvocationException e)
