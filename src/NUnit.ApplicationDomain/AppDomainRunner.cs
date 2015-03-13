@@ -29,7 +29,7 @@ namespace NUnit.ApplicationDomain
 
       var info = new AppDomainSetup();
 
-      //set the path to the assembly to load.
+      //set the path to the NUnit.ApplicationDomain assembly.
       info.ApplicationBase = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().EscapedCodeBase).LocalPath);
 
       if (!string.IsNullOrEmpty(testMethodInfo.AppConfigFile))
@@ -41,6 +41,12 @@ namespace NUnit.ApplicationDomain
                                                 null,
                                                 info,
                                                 GetPermissionSet());
+
+      // Add an assembly resolver, which knows the path for the NUnit.framework assembly
+      // and the assembly containing the test to run.
+      var ar = new AssemblyResolver(assembly);
+      domain.AssemblyResolve += ar.ResolveEventHandler;
+
       domain.Load(assembly.GetName());
 
       var instance = (InDomainRunner) domain.CreateInstanceAndUnwrap(
@@ -80,6 +86,78 @@ namespace NUnit.ApplicationDomain
 
       //return the PermissionSets specific to the type of zone
       return SecurityManager.GetStandardSandbox(ev);
+    }
+
+    [Serializable]
+    private class AssemblyResolver
+    {
+      /// <summary>
+      /// Creates an assembly resolver for all assemblies which might not be
+      /// in the same path as the NUnit.ApplicationDomain assembly.
+      /// </summary>
+      /// <param name="assembly">
+      /// The assembly that contains the test to run.
+      /// </param>
+      public AssemblyResolver(Assembly assembly)
+      {
+        // Store the name and location of the NUnit.framework assembly.
+        var nunitFrameworkAssembly = typeof(TestAttribute).Assembly;
+        this.NUnitFrameworkLocation = nunitFrameworkAssembly.Location;
+        this.NUnitFrameworkName = nunitFrameworkAssembly.FullName;
+        this.NUnitFrameworkSimpleName = new AssemblyName(this.NUnitFrameworkName).Name;
+
+        // Store the name and location of assembly containing the test to run.
+        this.AssemblyLocation = assembly.Location;
+        this.AssemblyName = assembly.FullName;
+        this.AssemblySimpleName = new AssemblyName(this.AssemblyName).Name;
+      }
+
+      private string NUnitFrameworkName { get; set; }
+      private string NUnitFrameworkSimpleName { get; set; }
+      private string NUnitFrameworkLocation { get; set; }
+
+      private string AssemblyName { get; set; }
+      private string AssemblySimpleName { get; set; }
+      private string AssemblyLocation { get; set; }
+
+      /// <summary>
+      /// Called when an assembly could not be resolved.
+      /// </summary>
+      /// <param name="sender">
+      /// The caller.
+      /// </param>
+      /// <param name="args">
+      /// The assembly which could not be resolved.
+      /// </param>
+      /// <returns>
+      /// The assembly, if known by the resolver; null, otherwise.
+      /// </returns>
+      public Assembly ResolveEventHandler(object sender, ResolveEventArgs args)
+      {
+        if (args.Name == this.NUnitFrameworkName || args.Name == this.NUnitFrameworkSimpleName)
+        {
+          // The NUnit.framework assembly could not be loaded
+          // => load it from the location known via the constructor.
+          var assembly = Assembly.LoadFrom(this.NUnitFrameworkLocation);
+          if (assembly == null)
+            throw new InvalidOperationException("nunit.framework assembly not found.");
+
+          return assembly;
+        }
+
+        if (args.Name == this.AssemblyName || args.Name == this.AssemblySimpleName)
+        {
+          // The assembly containing the test to run could not be loaded
+          // => load it from the location known via the constructor.
+          var assembly = Assembly.LoadFrom(this.AssemblyLocation);
+          if (assembly == null)
+            throw new InvalidOperationException("Assembly containing the tests not found.");
+
+          return assembly;
+        }
+
+        return null;
+      }
     }
   }
 }
