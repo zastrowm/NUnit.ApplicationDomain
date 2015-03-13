@@ -31,7 +31,7 @@ namespace NUnit.ApplicationDomain
     /// <returns> The path to the config file, or null if it does not exist. </returns>
     private static string FindConfigFile(Assembly assembly)
     {
-      string configFile = assembly.Location + ".config";
+      string configFile = new Uri(assembly.EscapedCodeBase).LocalPath + ".config";
       return File.Exists(configFile) ? configFile : null;
     }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -29,8 +30,8 @@ namespace NUnit.ApplicationDomain
 
       var info = new AppDomainSetup();
 
-      //set the path to the NUnit.ApplicationDomain assembly.
-      info.ApplicationBase = Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().EscapedCodeBase).LocalPath);
+      //set the path to the assembly to be tested.
+      info.ApplicationBase = Path.GetDirectoryName(new Uri(assembly.EscapedCodeBase).LocalPath);
 
       if (!string.IsNullOrEmpty(testMethodInfo.AppConfigFile))
       {
@@ -43,8 +44,8 @@ namespace NUnit.ApplicationDomain
                                                 GetPermissionSet());
 
       // Add an assembly resolver, which knows the path for the NUnit.framework assembly
-      // and the assembly containing the test to run.
-      var ar = new AssemblyResolver(assembly);
+      // and the NUnit.ApplicationDomain assembly.
+      var ar = new AssemblyResolver();
       domain.AssemblyResolve += ar.ResolveEventHandler;
 
       domain.Load(assembly.GetName());
@@ -93,32 +94,30 @@ namespace NUnit.ApplicationDomain
     {
       /// <summary>
       /// Creates an assembly resolver for all assemblies which might not be
-      /// in the same path as the NUnit.ApplicationDomain assembly.
+      /// in the same path as the assembly to be tested.
       /// </summary>
-      /// <param name="assembly">
-      /// The assembly that contains the test to run.
-      /// </param>
-      public AssemblyResolver(Assembly assembly)
+      public AssemblyResolver()
       {
         // Store the name and location of the NUnit.framework assembly.
         var nunitFrameworkAssembly = typeof(TestAttribute).Assembly;
-        this.NUnitFrameworkLocation = nunitFrameworkAssembly.Location;
+        this.NUnitFrameworkLocation = new Uri(nunitFrameworkAssembly.EscapedCodeBase).LocalPath;
         this.NUnitFrameworkName = nunitFrameworkAssembly.FullName;
         this.NUnitFrameworkSimpleName = new AssemblyName(this.NUnitFrameworkName).Name;
 
-        // Store the name and location of assembly containing the test to run.
-        this.AssemblyLocation = assembly.Location;
-        this.AssemblyName = assembly.FullName;
-        this.AssemblySimpleName = new AssemblyName(this.AssemblyName).Name;
+        // Store the name and location of the NUnit.ApplicationDomain assembly.
+        var nunitApplicationDomainAssembly = typeof(InDomainRunner).Assembly;
+        this.NUnitApplicationDomainLocation = new Uri(nunitApplicationDomainAssembly.EscapedCodeBase).LocalPath;
+        this.NUnitApplicationDomainName = nunitApplicationDomainAssembly.FullName;
+        this.NUnitApplicationDomainSimpleName = new AssemblyName(this.NUnitApplicationDomainName).Name;
       }
 
       private string NUnitFrameworkName { get; set; }
       private string NUnitFrameworkSimpleName { get; set; }
       private string NUnitFrameworkLocation { get; set; }
 
-      private string AssemblyName { get; set; }
-      private string AssemblySimpleName { get; set; }
-      private string AssemblyLocation { get; set; }
+      private string NUnitApplicationDomainName { get; set; }
+      private string NUnitApplicationDomainSimpleName { get; set; }
+      private string NUnitApplicationDomainLocation { get; set; }
 
       /// <summary>
       /// Called when an assembly could not be resolved.
@@ -145,17 +144,20 @@ namespace NUnit.ApplicationDomain
           return assembly;
         }
 
-        if (args.Name == this.AssemblyName || args.Name == this.AssemblySimpleName)
+        if (args.Name == this.NUnitApplicationDomainName || args.Name == this.NUnitApplicationDomainSimpleName)
         {
-          // The assembly containing the test to run could not be loaded
+          // The NUnit.ApplicationDomain assembly could not be loaded
           // => load it from the location known via the constructor.
-          var assembly = Assembly.LoadFrom(this.AssemblyLocation);
+          var assembly = Assembly.LoadFrom(this.NUnitApplicationDomainLocation);
           if (assembly == null)
-            throw new InvalidOperationException("Assembly containing the tests not found.");
+            throw new InvalidOperationException("NUnitApplicationDomain assembly not found.");
 
           return assembly;
         }
 
+        // Some other assembly, not known by us, could not be loaded
+        // => return null.
+        Debug.WriteLine("Unknown assembly to be loaded: {0} requested by {1}", args.Name, args.RequestingAssembly);
         return null;
       }
     }
