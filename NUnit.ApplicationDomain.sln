@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnit.ApplicationDomain.Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnit.ApplicationDomain.Tests.#", "test\NUnit.ApplicationDomain.Tests.#\NUnit.ApplicationDomain.Tests.#.csproj", "{3CB7F4B6-D1F0-4691-9648-313E6B7768F2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NUnit.ApplicationDomain.Base.Tests", "test\NUnit.ApplicationDomain.Base.Tests\NUnit.ApplicationDomain.Base.Tests.csproj", "{43096B75-73A0-45C2-B008-2DF3F3F227D0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{3CB7F4B6-D1F0-4691-9648-313E6B7768F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CB7F4B6-D1F0-4691-9648-313E6B7768F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CB7F4B6-D1F0-4691-9648-313E6B7768F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43096B75-73A0-45C2-B008-2DF3F3F227D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43096B75-73A0-45C2-B008-2DF3F3F227D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43096B75-73A0-45C2-B008-2DF3F3F227D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43096B75-73A0-45C2-B008-2DF3F3F227D0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

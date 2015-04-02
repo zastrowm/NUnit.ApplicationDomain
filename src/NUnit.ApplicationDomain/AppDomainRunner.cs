@@ -43,14 +43,13 @@ namespace NUnit.ApplicationDomain
                                                 info,
                                                 GetPermissionSet());
 
-      // Add an assembly resolver, which knows the path for the NUnit.framework assembly
-      // and the assembly to be tested.
-      var ar = new AssemblyResolver(assembly);
+      // Add an assembly resolver for resolving any assemblies not known by the test application domain.
+      var ar = new AssemblyResolver(AppDomain.CurrentDomain);
       domain.AssemblyResolve += ar.ResolveEventHandler;
 
       domain.Load(assembly.GetName());
 
-      var instance = (InDomainRunner) domain.CreateInstanceAndUnwrap(
+      var instance = (InDomainRunner)domain.CreateInstanceAndUnwrap(
         typeof(InDomainRunner).Assembly.FullName,
         typeof(InDomainRunner).FullName);
 
@@ -89,36 +88,55 @@ namespace NUnit.ApplicationDomain
     }
 
     [Serializable]
+    private class ResolveHelper : MarshalByRefObject
+    {
+      public string ResolveLocationOfAssembly(string assemblyName)
+      {
+        Assembly assembly = null;
+
+        // Load the assembly.
+        // If loading fails, it can throw FileNotFoundException or FileLoadException.
+        // Ignore those; this will return null.
+        try
+        {
+          assembly = Assembly.Load(assemblyName);
+        }
+        catch (FileNotFoundException)
+        {
+        }
+        catch (FileLoadException)
+        {
+        }
+
+        return assembly != null ? new Uri(assembly.EscapedCodeBase).LocalPath : null;
+      }
+    }
+
+    [Serializable]
     private class AssemblyResolver
     {
       /// <summary>
       /// Creates an assembly resolver for all assemblies which might not be
       /// in the same path as the NUnit.ApplicationDomain assembly.
       /// </summary>
-      /// <param name="assemblyToTest">
-      /// The assembly to be tested.
-      /// </param>
-      public AssemblyResolver(Assembly assemblyToTest)
+      public AssemblyResolver(AppDomain parentAppDomain)
       {
-        // Store the name and location of the NUnit.framework assembly.
-        var nunitFrameworkAssembly = typeof(TestAttribute).Assembly;
-        this.NUnitFrameworkLocation = new Uri(nunitFrameworkAssembly.EscapedCodeBase).LocalPath;
-        this.NUnitFrameworkName = nunitFrameworkAssembly.FullName;
-        this.NUnitFrameworkSimpleName = new AssemblyName(this.NUnitFrameworkName).Name;
+        this.ParentAppDomain = parentAppDomain;
 
-        // Store the name and location of the NUnit.ApplicationDomain assembly.
-        this.AssemblyToTestLocation = new Uri(assemblyToTest.EscapedCodeBase).LocalPath;
-        this.AssemblyToTestName = assemblyToTest.FullName;
-        this.AssemblyToTestSimpleName = new AssemblyName(this.AssemblyToTestName).Name;
+        // Create the resolve helper in the parent appdomain.
+        // The parent appdomain might know or can load the assembly, so ask it indirectly via ResolveHelper.
+        this.ResolveHelper =
+          (ResolveHelper)
+          this.ParentAppDomain.CreateInstanceAndUnwrap(typeof(ResolveHelper).Assembly.FullName, typeof(ResolveHelper).FullName);
+
+        this.ResolvedAssemblies = new Dictionary<string, Assembly>();
       }
 
-      private string NUnitFrameworkName { get; set; }
-      private string NUnitFrameworkSimpleName { get; set; }
-      private string NUnitFrameworkLocation { get; set; }
+      private AppDomain ParentAppDomain { get; set; }
 
-      private string AssemblyToTestName { get; set; }
-      private string AssemblyToTestSimpleName { get; set; }
-      private string AssemblyToTestLocation { get; set; }
+      private ResolveHelper ResolveHelper { get; set; }
+
+      private Dictionary<string, Assembly> ResolvedAssemblies { get; set; }
 
       /// <summary>
       /// Called when an assembly could not be resolved.
@@ -134,30 +152,25 @@ namespace NUnit.ApplicationDomain
       /// </returns>
       public Assembly ResolveEventHandler(object sender, ResolveEventArgs args)
       {
-        if (args.Name == this.NUnitFrameworkName || args.Name == this.NUnitFrameworkSimpleName)
+        // Check the dictionary.
+        Assembly assembly;
+        if (this.ResolvedAssemblies.TryGetValue(args.Name, out assembly))
         {
-          // The NUnit.framework assembly could not be loaded
-          // => load it from the location known via the constructor.
-          var assembly = Assembly.LoadFrom(this.NUnitFrameworkLocation);
-          if (assembly == null)
-            throw new InvalidOperationException("nunit.framework assembly not found.");
-
           return assembly;
         }
 
-        if (args.Name == this.AssemblyToTestName || args.Name == this.AssemblyToTestSimpleName)
-        {
-          // The assembly to be tested could not be loaded
-          // => load it from the location known via the constructor.
-          var assembly = Assembly.LoadFrom(this.AssemblyToTestLocation);
-          if (assembly == null)
-            throw new InvalidOperationException("Assembly to be tested not found.");
+        // Not yet known => Store null in the dictionary (helps against stack overflow if a recursive call happens).
+        this.ResolvedAssemblies[args.Name] = null;
 
+        var assemblyLocation = this.ResolveHelper.ResolveLocationOfAssembly(args.Name);
+        if (!string.IsNullOrEmpty(assemblyLocation))
+        {
+          // The resolve helper found the assembly.
+          assembly = Assembly.LoadFrom(assemblyLocation);
+          this.ResolvedAssemblies[args.Name] = assembly;
           return assembly;
         }
 
-        // Some other assembly, not known by us, could not be loaded
-        // => return null.
         Debug.WriteLine("Unknown assembly to be loaded: '{0}', requested by '{1}'", args.Name, args.RequestingAssembly);
         return null;
       }
