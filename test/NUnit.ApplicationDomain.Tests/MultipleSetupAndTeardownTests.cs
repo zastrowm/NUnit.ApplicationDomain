@@ -41,7 +41,7 @@ namespace NUnit.ApplicationDomain.Tests
   public class MultipleSetupAndTeardownTests : MultipleSetupAndTeardownTestsBase
   {
     [SetUp]
-    public void Setup()
+    public new void Setup()
     {
       if (!AppDomainRunner.IsInTestAppDomain)
         return;
@@ -57,7 +57,7 @@ namespace NUnit.ApplicationDomain.Tests
     }
 
     [TearDown]
-    public void Teardown()
+    public new void Teardown()
     {
       if (!AppDomainRunner.IsInTestAppDomain)
         return;

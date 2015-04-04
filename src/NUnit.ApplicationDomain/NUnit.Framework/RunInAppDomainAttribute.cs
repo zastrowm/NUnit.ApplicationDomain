@@ -14,7 +14,9 @@ namespace NUnit.Framework
 
     /// <summary> Constructor. </summary>
     public RunInApplicationDomainAttribute()
-      : this(null) {}
+      : this(null)
+    {
+    }
 
     /// <summary> Constructor. </summary>
     /// <param name="name"> The name to give to the application domain in which the test should be run. </param>
@@ -66,7 +68,6 @@ namespace NUnit.Framework
     /// <param name="testDetails">Provides details about the test that has just been run.</param>
     public void AfterTest(TestDetails testDetails)
     {
-
     }
 
     /// <summary>

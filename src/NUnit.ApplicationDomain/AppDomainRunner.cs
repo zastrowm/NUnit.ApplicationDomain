@@ -15,7 +15,7 @@ namespace NUnit.ApplicationDomain
   {
     /// <summary>
     ///  Returns true if the current test is being executed in an application domain created by the
-    ///  <typeparamref name="NUnit.Framework.RunInAppDomainAttribute"/>.
+    ///  <see cref="RunInApplicationDomainAttribute"/>
     /// </summary>
     public static bool IsInTestAppDomain { get; internal set; }
 
@@ -127,7 +127,8 @@ namespace NUnit.ApplicationDomain
         // The parent appdomain might know or can load the assembly, so ask it indirectly via ResolveHelper.
         this.ResolveHelper =
           (ResolveHelper)
-          this.ParentAppDomain.CreateInstanceAndUnwrap(typeof(ResolveHelper).Assembly.FullName, typeof(ResolveHelper).FullName);
+            this.ParentAppDomain.CreateInstanceAndUnwrap(typeof(ResolveHelper).Assembly.FullName,
+                                                         typeof(ResolveHelper).FullName);
 
         this.ResolvedAssemblies = new Dictionary<string, Assembly>();
       }

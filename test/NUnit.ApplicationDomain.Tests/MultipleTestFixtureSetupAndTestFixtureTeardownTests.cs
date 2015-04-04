@@ -41,7 +41,7 @@ namespace NUnit.ApplicationDomain.Tests
   public class MultipleTestFixtureSetupAndTestFixtureTeardownTests : MultipleTestFixtureSetupAndTestFixtureTeardownTestsBase
   {
     [TestFixtureSetUp]
-    public void TestFixtureSetup()
+    public new void TestFixtureSetup()
     {
       if (!AppDomainRunner.IsInTestAppDomain)
         return;
@@ -57,7 +57,7 @@ namespace NUnit.ApplicationDomain.Tests
     }
 
     [TestFixtureTearDown]
-    public void TestFixtureTeardown()
+    public new void TestFixtureTeardown()
     {
       if (!AppDomainRunner.IsInTestAppDomain)
         return;
