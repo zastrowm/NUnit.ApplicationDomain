@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>NUnit.ApplicationDomain</id>
-        <version>3.0.1</version>
+        <version>4.0.1</version>
         <title>NUnit Application Domain Runner</title>
         <authors>Mackenzie Zastrow</authors>
         <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
@@ -11,7 +11,10 @@
         <description>Run NUnit tests in a separate application domain.</description>
         <summary>Allows running NUnit tests in a separate application domain.</summary>
         <releaseNotes>
-## Version 3.0.0
+## Version 4.0.1
+- Add support for additional test runners/shadow copying 
+
+## Version 3.0.1
 - Add support for teardown methods
 - Add official support for multiple setup/teardown methods
 - Add AppDomainRunner.IsInTestAppDomain to detect if you're running in 
