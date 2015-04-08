@@ -38,7 +38,7 @@ namespace NUnit.ApplicationDomain
 
       object instance = Activator.CreateInstance(typeUnderTest);
 
-      return ExecuteTestMethod(instance, setupMethods, testMethod, args.TestCaseAttributeValues, teardownMethods);
+      return ExecuteTestMethod(instance, setupMethods, testMethod, args.Parameters, teardownMethods);
     }
 
     /// <summary>
@@ -47,14 +47,14 @@ namespace NUnit.ApplicationDomain
     /// <param name="instance"> The instance that is having its test method invoked. </param>
     /// <param name="setupMethods"> The setup methods to invoke prior to invoking the test method. </param>
     /// <param name="testMethod"> The actual method under test. </param>
-    /// <param name="testCaseAttributeValues"> The parameters set via TestCaseAttribute. </param>
+    /// <param name="parameters"> The parameters, potentially set via TestCaseAttribute. </param>
     /// <param name="teardownMethods"> The teardown methods to invoke prior to invoking the test
     ///  method. </param>
     /// <returns> Any exception that occurred while executing the test. </returns>
     private static Exception ExecuteTestMethod(object instance,
                                                IEnumerable<MethodInfo> setupMethods,
                                                MethodInfo testMethod,
-                                               List<object[]> testCaseAttributeValues,
+                                               object[] parameters,
                                                IEnumerable<MethodInfo> teardownMethods)
     {
       Exception exceptionCaught = null;
@@ -69,21 +69,7 @@ namespace NUnit.ApplicationDomain
           setupMethod.Invoke(instance, null);
         }
 
-        if (!testCaseAttributeValues.Any())
-        {
-          // No TestCaseAttribute => run once with no parameters.
-          testMethod.Invoke(instance, null);
-        }
-        else
-        {
-          // TestCaseAttribute was used => run once for each attribute.
-          // Unfortunately, we cannot find out which TestCaseAttribute belongs to the current test run,
-          // so the test will be run multiple times.
-          foreach (var value in testCaseAttributeValues)
-          {
-            testMethod.Invoke(instance, value);
-          }
-        }
+        testMethod.Invoke(instance, parameters);
 
         foreach (var teardownMethod in teardownMethods)
         {
@@ -120,7 +106,7 @@ namespace NUnit.ApplicationDomain
         // get only methods that do not have any parameters and have exactly one Setup method
         var methodsOnCurrentType = from method in typeUnderTest.GetMethods(searchFlags)
                                    where method.GetParameters().Length == 0
-                                   let setupAttribute = (T[]) method.GetCustomAttributes(typeof(T), false)
+                                   let setupAttribute = (T[])method.GetCustomAttributes(typeof(T), false)
                                    where setupAttribute.Length == 1
                                    select method;
 
