@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using NUnit.Framework;
+
+using System.IO;
 using System.Reflection;
 using System.Linq;
 using System.Collections.Generic;
@@ -23,7 +25,7 @@ namespace NUnit.ApplicationDomain
       string fullName = type.FullName + "," + type.Assembly.GetName().Name;
       string configFile = FindConfigFile(Assembly.GetAssembly(type));
 
-      return new TestMethodInformation(fullName, method.Name, configFile);
+      return new TestMethodInformation(fullName, method.Name, configFile, (TestCaseAttribute[])method.GetCustomAttributes(typeof(TestCaseAttribute), false));
     }
 
     /// <summary> Try to get the AppConfig file for the assembly. </summary>
@@ -38,10 +40,11 @@ namespace NUnit.ApplicationDomain
     /// <summary> Constructor. </summary>
     /// <exception cref="ArgumentNullException">  When one or more required arguments are null. </exception>
     /// <param name="className">  The name of the class that contains the method to run in the
-    ///  application domain. </param>
+    ///   application domain. </param>
     /// <param name="methodName"> Name of the method to run. </param>
     /// <param name="appConfigFile"> The config file for the method. </param>
-    public TestMethodInformation(string className, string methodName, string appConfigFile)
+    /// <param name="testCaseAttributes"> Any TestCaseAttributes applied to the test method. </param>
+    public TestMethodInformation(string className, string methodName, string appConfigFile, TestCaseAttribute[] testCaseAttributes)
     {
       if (className == null)
         throw new ArgumentNullException("className");
@@ -53,6 +56,12 @@ namespace NUnit.ApplicationDomain
       AppConfigFile = appConfigFile;
       OutputStream = Console.Out;
       ErrorStream = Console.Error;
+
+      TestCaseAttributeValues = new List<object[]>();
+      foreach (var testCaseAttribute in testCaseAttributes)
+      {
+        TestCaseAttributeValues.Add(testCaseAttribute.Arguments);
+      }
     }
 
     /// <summary>
@@ -71,5 +80,8 @@ namespace NUnit.ApplicationDomain
 
     /// <summary> System.Err. </summary>
     public TextWriter ErrorStream { get; private set; }
+
+    /// <summary> Any additional parameters to the test method, set via TestCaseAttribute. </summary>
+    public List<object[]> TestCaseAttributeValues { get; private set; }
   }
 }

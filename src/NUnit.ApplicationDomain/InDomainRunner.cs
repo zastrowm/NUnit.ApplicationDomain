@@ -38,7 +38,7 @@ namespace NUnit.ApplicationDomain
 
       object instance = Activator.CreateInstance(typeUnderTest);
 
-      return ExecuteTestMethod(instance, setupMethods, testMethod, teardownMethods);
+      return ExecuteTestMethod(instance, setupMethods, testMethod, args.TestCaseAttributeValues, teardownMethods);
     }
 
     /// <summary>
@@ -47,12 +47,14 @@ namespace NUnit.ApplicationDomain
     /// <param name="instance"> The instance that is having its test method invoked. </param>
     /// <param name="setupMethods"> The setup methods to invoke prior to invoking the test method. </param>
     /// <param name="testMethod"> The actual method under test. </param>
+    /// <param name="testCaseAttributeValues"> The parameters set via TestCaseAttribute. </param>
     /// <param name="teardownMethods"> The teardown methods to invoke prior to invoking the test
     ///  method. </param>
     /// <returns> Any exception that occurred while executing the test. </returns>
     private static Exception ExecuteTestMethod(object instance,
                                                IEnumerable<MethodInfo> setupMethods,
                                                MethodInfo testMethod,
+                                               List<object[]> testCaseAttributeValues,
                                                IEnumerable<MethodInfo> teardownMethods)
     {
       Exception exceptionCaught = null;
@@ -67,7 +69,21 @@ namespace NUnit.ApplicationDomain
           setupMethod.Invoke(instance, null);
         }
 
-        testMethod.Invoke(instance, null);
+        if (!testCaseAttributeValues.Any())
+        {
+          // No TestCaseAttribute => run once with no parameters.
+          testMethod.Invoke(instance, null);
+        }
+        else
+        {
+          // TestCaseAttribute was used => run once for each attribute.
+          // Unfortunately, we cannot find out which TestCaseAttribute belongs to the current test run,
+          // so the test will be run multiple times.
+          foreach (var value in testCaseAttributeValues)
+          {
+            testMethod.Invoke(instance, value);
+          }
+        }
 
         foreach (var teardownMethod in teardownMethods)
         {
