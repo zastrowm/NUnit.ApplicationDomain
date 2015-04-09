@@ -1,7 +1,11 @@
-﻿using System.IO;
+﻿using NUnit.Framework;
+
+using System.Globalization;
+using System.IO;
 using System.Reflection;
 using System.Linq;
 using System.Collections.Generic;
+using System.Text;
 using System;
 
 namespace NUnit.ApplicationDomain
@@ -38,10 +42,11 @@ namespace NUnit.ApplicationDomain
     /// <summary> Constructor. </summary>
     /// <exception cref="ArgumentNullException">  When one or more required arguments are null. </exception>
     /// <param name="className">  The name of the class that contains the method to run in the
-    ///  application domain. </param>
+    ///   application domain. </param>
     /// <param name="methodName"> Name of the method to run. </param>
     /// <param name="appConfigFile"> The config file for the method. </param>
-    public TestMethodInformation(string className, string methodName, string appConfigFile)
+    /// <param name="testCaseAttributes"> Any TestCaseAttributes applied to the test method. </param>
+    private TestMethodInformation(string className, string methodName, string appConfigFile)
     {
       if (className == null)
         throw new ArgumentNullException("className");
@@ -53,6 +58,30 @@ namespace NUnit.ApplicationDomain
       AppConfigFile = appConfigFile;
       OutputStream = Console.Out;
       ErrorStream = Console.Error;
+
+      TryFindParameters();
+    }
+
+    private void TryFindParameters()
+    {
+      var types = from assembly in AppDomain.CurrentDomain.GetAssemblies()
+                  where assembly.FullName.Contains("nunit.core")
+                  from type in assembly.GetTypes()
+                  where type.FullName == "NUnit.Core.TestExecutionContext"
+                  select type;
+
+      var execContext = types.FirstOrDefault();
+      if (execContext == null)
+        return;
+
+      var currentContextProperty = execContext.GetProperty("CurrentContext", BindingFlags.Public | BindingFlags.Static);
+      dynamic currentContext = currentContextProperty.GetValue(null, null);
+
+      var currentTest = currentContext.CurrentTest;
+      var argumentsField = ((Type)currentTest.GetType()).GetField(
+        "arguments",
+        BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField);
+      Parameters = argumentsField.GetValue(currentTest);
     }
 
     /// <summary>
@@ -71,5 +100,8 @@ namespace NUnit.ApplicationDomain
 
     /// <summary> System.Err. </summary>
     public TextWriter ErrorStream { get; private set; }
+
+    /// <summary> Any additional parameters to give to the test method, set via TestCaseAttribute. </summary>
+    public object[] Parameters { get; private set; }
   }
 }
