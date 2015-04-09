@@ -41,7 +41,7 @@ namespace NUnit.Framework
       Exception exception = AppDomainRunner.Run(
         Name,
         testClassType.Assembly,
-        TestMethodInformation.CreateTestMethodInformation(testClassType, testDetails.Method, testDetails.FullName));
+        TestMethodInformation.CreateTestMethodInformation(testClassType, testDetails.Method));
 
       if (exception == null)
       {
