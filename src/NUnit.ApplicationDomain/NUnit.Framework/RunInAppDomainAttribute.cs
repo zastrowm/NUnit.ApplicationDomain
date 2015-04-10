@@ -7,6 +7,7 @@ namespace NUnit.Framework
 {
   /// <summary> Indicates that a test should be run in a separate application domain. </summary>
   [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
+  [Obsolete("Use the parameter-less constructor overload")]
   public class RunInApplicationDomainAttribute : Attribute, ITestAction
   {
     /// <summary> The name to give to the application domain in which the test should be run. </summary>
@@ -14,16 +15,8 @@ namespace NUnit.Framework
 
     /// <summary> Constructor. </summary>
     public RunInApplicationDomainAttribute()
-      : this(null)
     {
-    }
-
-    /// <summary> Constructor. </summary>
-    /// <param name="name"> The name to give to the application domain in which the test should be run. </param>
-    [Obsolete("Use the parameter-less constructor overload")]
-    public RunInApplicationDomainAttribute(string name)
-    {
-      Name = name ?? AppDomainTestRunnerBase.DefaultAppDomainName;
+      Name = AppDomainTestRunnerBase.DefaultAppDomainName;
     }
 
     /// <summary>
