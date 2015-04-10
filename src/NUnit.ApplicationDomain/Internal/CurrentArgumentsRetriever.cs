@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace NUnit.ApplicationDomain
+namespace NUnit.ApplicationDomain.Internal
 {
   /// <summary>
   ///  Facilitates retrieving <code>NUnit.Core.TestExecutionContext.CurrentContext.arguments</code>

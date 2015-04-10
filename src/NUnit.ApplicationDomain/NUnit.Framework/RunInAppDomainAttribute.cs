@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.ApplicationDomain;
+using NUnit.ApplicationDomain.Internal;
 
 namespace NUnit.Framework
 {
@@ -31,7 +32,7 @@ namespace NUnit.Framework
 
       var methodData = new TestMethodInformation(testClassType, testDetails.Method);
 
-      Exception exception = AppDomainRunner.Run(AppDomainRunner.TestAppDomainName, methodData);
+      Exception exception = ParentAppDomainRunner.Run(AppDomainRunner.TestAppDomainName, methodData);
 
       if (exception == null)
       {

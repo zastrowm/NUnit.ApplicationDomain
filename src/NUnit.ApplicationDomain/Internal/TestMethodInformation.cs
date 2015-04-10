@@ -1,13 +1,10 @@
-﻿using NUnit.Framework;
-using System.Globalization;
-using System.IO;
-using System.Reflection;
-using System.Linq;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 
-namespace NUnit.ApplicationDomain
+namespace NUnit.ApplicationDomain.Internal
 {
   /// <summary> All of the arguments for the TestExecutor. </summary>
   internal class TestMethodInformation : MarshalByRefObject
@@ -21,10 +18,13 @@ namespace NUnit.ApplicationDomain
     {
       if (typeUnderTest == null)
         throw new ArgumentNullException("typeUnderTest");
+      if (!typeUnderTest.IsPublic)
+        throw new ArgumentException("Class under test must be declared as public", "typeUnderTest");
       if (method == null)
         throw new ArgumentNullException("method");
       if (method.DeclaringType == null)
         throw new ArgumentNullException("method");
+
 
       string configFile = FindConfigFile(Assembly.GetAssembly(typeUnderTest));
 

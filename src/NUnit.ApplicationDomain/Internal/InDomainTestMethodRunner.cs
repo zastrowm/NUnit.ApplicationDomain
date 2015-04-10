@@ -1,13 +1,14 @@
-﻿using System.Reflection;
-using System.Linq;
+﻿using System;
 using System.Collections.Generic;
-using System;
+using System.Linq;
+using System.Reflection;
 using NUnit.Framework;
 
-namespace NUnit.ApplicationDomain
+namespace NUnit.ApplicationDomain.Internal
 {
   /// <summary> Executes a test method in the application domain. </summary>
-  internal sealed class InDomainRunner : MarshalByRefObject
+  /// <returns> Runs in the test app domain. </returns>
+  internal sealed class InDomainTestMethodRunner : MarshalByRefObject
   {
     /// <summary> Executes the test method indicates by <paramref name="testMethodInfo"/>. </summary>
     /// <param name="testMethodInfo"> Information that describes the test method to execute. </param>

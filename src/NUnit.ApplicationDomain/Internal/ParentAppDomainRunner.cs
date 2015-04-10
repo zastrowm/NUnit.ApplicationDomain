@@ -2,35 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Security;
 using System.Security.Policy;
-using NUnit.Framework;
 
-namespace NUnit.ApplicationDomain
+namespace NUnit.ApplicationDomain.Internal
 {
-  /// <summary> Helps to run a test in another application domain. </summary>
-  public static class AppDomainRunner
+  /// <summary> Runs a TestMethodInformation in a child app domain. </summary>
+  internal static class ParentAppDomainRunner
   {
-    /// <summary> The name of the app-domain in which tests are run. </summary>
-    public const string TestAppDomainName = " NUnit.ApplicationDomain ({9421D297-D477-4CEE-9C09-38BCC1AB5176})";
-
-    /// <summary>
-    ///  Returns true if the current test is being executed in an application domain created by the
-    ///  <see cref="RunInApplicationDomainAttribute"/>
-    /// </summary>
-    public static bool IsInTestAppDomain { get; internal set; }
-
-    /// <summary>
-    ///  Returns false if the current test is being executed in an application domain created by the
-    ///  <see cref="RunInApplicationDomainAttribute"/>
-    /// </summary>
-    /// <remarks> Equivalent to !IsInTestAppDomain. </remarks>
-    public static bool IsNotInTestAppDomain
-    {
-      get { return !IsInTestAppDomain; }
-    }
-
     /// <summary> Runs a test in another application domain. </summary>
     /// <param name="testDomainName"> The name to assign to the application domain. </param>
     /// <param name="testMethodInfo"> The arguments to pass to the runner inside the application
@@ -38,13 +17,15 @@ namespace NUnit.ApplicationDomain
     /// <returns> The exception that occurred in the test, or null if no exception occurred. </returns>
     internal static Exception Run(string testDomainName, TestMethodInformation testMethodInfo)
     {
-      if (!testMethodInfo.TypeUnderTest.IsPublic)
-        throw new InvalidOperationException("Class under test must be declared as public");
+      if (testDomainName == null)
+        throw new ArgumentNullException("testDomainName");
+      if (testMethodInfo == null)
+        throw new ArgumentNullException("testMethodInfo");
 
       var info = new AppDomainSetup();
 
       //set the path to the NUnit.ApplicationDomain assembly.
-      info.ApplicationBase = Path.GetDirectoryName(new Uri(typeof(InDomainRunner).Assembly.EscapedCodeBase).LocalPath);
+      info.ApplicationBase = Path.GetDirectoryName(new Uri(typeof(InDomainTestMethodRunner).Assembly.EscapedCodeBase).LocalPath);
 
       if (!String.IsNullOrEmpty(testMethodInfo.AppConfigFile))
       {
@@ -57,12 +38,12 @@ namespace NUnit.ApplicationDomain
                                                 GetPermissionSet());
 
       // Add an assembly resolver for resolving any assemblies not known by the test application domain.
-      var assemblyResolver = new AssemblyResolver(AppDomain.CurrentDomain);
+      var assemblyResolver = new InDomainAssemblyResolver(new ResolveHelper());
       domain.AssemblyResolve += assemblyResolver.ResolveEventHandler;
 
       domain.Load(testMethodInfo.TypeUnderTest.Assembly.GetName());
 
-      var inDomainRunner = CreateInDomain<InDomainRunner>(domain);
+      var inDomainRunner = domain.CreateInstanceAndUnwrap<InDomainTestMethodRunner>();
 
       return inDomainRunner.Execute(testMethodInfo);
     }
@@ -71,7 +52,7 @@ namespace NUnit.ApplicationDomain
     /// <param name="domain"> The domain in which the object should be constructed. </param>
     /// <typeparam name="T"> The type of the object to construct </typeparam>
     /// <returns> An instance of T, unwrapped from the domain. </returns>
-    internal static T CreateInDomain<T>(AppDomain domain)
+    internal static T CreateInstanceAndUnwrap<T>(this AppDomain domain)
     {
       return (T)domain.CreateInstanceAndUnwrap(typeof(T).Assembly.FullName,
                                                typeof(T).FullName);

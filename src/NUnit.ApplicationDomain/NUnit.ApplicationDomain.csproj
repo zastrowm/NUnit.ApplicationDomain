@@ -46,13 +46,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppDomainRunner.cs" />
-    <Compile Include="AssemblyResolver.cs" />
-    <Compile Include="CurrentArgumentsRetriever.cs" />
+    <Compile Include="Internal\ResolveHelper.cs" />
+    <Compile Include="NUnit.Framework\AppDomainRunner.cs" />
+    <Compile Include="Internal\InDomainAssemblyResolver.cs" />
+    <Compile Include="Internal\CurrentArgumentsRetriever.cs" />
+    <Compile Include="Internal\ParentAppDomainRunner.cs" />
     <Compile Include="NUnit.Framework\RunInAppDomainAttribute.cs" />
-    <Compile Include="ResolveHelper.cs" />
-    <Compile Include="TestMethodInformation.cs" />
-    <Compile Include="InDomainRunner.cs" />
+    <Compile Include="Internal\TestMethodInformation.cs" />
+    <Compile Include="Internal\InDomainTestMethodRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
