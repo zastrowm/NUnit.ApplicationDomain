@@ -47,7 +47,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppDomainRunner.cs" />
+    <Compile Include="AssemblyResolver.cs" />
     <Compile Include="NUnit.Framework\RunInAppDomainAttribute.cs" />
+    <Compile Include="ResolveHelper.cs" />
     <Compile Include="TestMethodInformation.cs" />
     <Compile Include="InDomainRunner.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -9,19 +9,16 @@ namespace NUnit.ApplicationDomain
   /// <summary> Executes a test method in the application domain. </summary>
   internal sealed class InDomainRunner : MarshalByRefObject
   {
-    /// <summary> Executes the test method indicates by <paramref name="args"/>. </summary>
-    /// <param name="args"> Information that describes the test method to execute. </param>
+    /// <summary> Executes the test method indicates by <paramref name="testMethodInfo"/>. </summary>
+    /// <param name="testMethodInfo"> Information that describes the test method to execute. </param>
     /// <returns> The exception that occurred as a result of executing the method. </returns>
-    public Exception Execute(TestMethodInformation args)
+    public Exception Execute(TestMethodInformation testMethodInfo)
     {
       // Forward this data from the outside application domain
-      Console.SetOut(args.OutputStream);
-      Console.SetError(args.ErrorStream);
+      Console.SetOut(testMethodInfo.OutputStream);
+      Console.SetError(testMethodInfo.ErrorStream);
 
-      Type typeUnderTest = Type.GetType(args.TypeName);
-
-      if (typeUnderTest == null)
-        throw new ArgumentException("ClassName did not point to a valid type", "args");
+      Type typeUnderTest = testMethodInfo.TypeUnderTest;
 
       // get all of the setup methods in the type
       var setupMethods = GetMethodsWithAttributes<TestFixtureSetUpAttribute>(typeUnderTest);
@@ -34,34 +31,37 @@ namespace NUnit.ApplicationDomain
       var teardownMethods = GetMethodsWithAttributes<TestFixtureTearDownAttribute>(typeUnderTest);
       teardownMethods.AddRange(GetMethodsWithAttributes<TearDownAttribute>(typeUnderTest));
 
-      var testMethod = typeUnderTest.GetMethod(args.TestName);
-
       object instance = Activator.CreateInstance(typeUnderTest);
 
-      return ExecuteTestMethod(instance, setupMethods, testMethod, args.Parameters, teardownMethods);
+      return ExecuteTestMethod(instance,
+                               testMethodInfo.MethodUnderTest,
+                               testMethodInfo.Parameters,
+                               setupMethods,
+                               teardownMethods);
     }
 
     /// <summary>
     ///  Invokes the test method between the invocation of any setup methods and teardown methods.
     /// </summary>
     /// <param name="instance"> The instance that is having its test method invoked. </param>
-    /// <param name="setupMethods"> The setup methods to invoke prior to invoking the test method. </param>
     /// <param name="testMethod"> The actual method under test. </param>
     /// <param name="parameters"> The parameters, potentially set via TestCaseAttribute. </param>
+    /// <param name="setupMethods"> The setup methods to invoke prior to invoking the test method. </param>
     /// <param name="teardownMethods"> The teardown methods to invoke prior to invoking the test
-    ///  method. </param>
+    ///   method. </param>
     /// <returns> Any exception that occurred while executing the test. </returns>
     private static Exception ExecuteTestMethod(object instance,
-                                               IEnumerable<MethodInfo> setupMethods,
-                                               MethodInfo testMethod,
+                                               MethodBase testMethod,
                                                object[] parameters,
+                                               IEnumerable<MethodInfo> setupMethods,
                                                IEnumerable<MethodInfo> teardownMethods)
     {
       Exception exceptionCaught = null;
 
       try
       {
-        // mark this test as being in the app domain
+        // mark this test as being in the app domain.  As soon as we're done, we're going to tear down
+        // the app domain, so there is no need to set this back to false. 
         AppDomainRunner.IsInTestAppDomain = true;
 
         foreach (var setupMethod in setupMethods)
