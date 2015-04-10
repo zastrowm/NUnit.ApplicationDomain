@@ -8,35 +8,43 @@ namespace NUnit.Framework
   /// <summary> Indicates that a test should be run in a separate application domain. </summary>
   [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
   [Obsolete("Use the parameter-less constructor overload")]
-  public class RunInApplicationDomainAttribute : Attribute, ITestAction
+  public class RunInApplicationDomainAttribute : TestActionAttribute
   {
+    /// <summary> The AppDomain name to use if the application domain is not explicitly specified. </summary>
+    public const string DefaultAppDomainName = "{9421D297-D477-4CEE-9C09-38BCC1AB5176}";
+
     /// <summary> The name to give to the application domain in which the test should be run. </summary>
     public string Name { get; private set; }
 
     /// <summary> Constructor. </summary>
     public RunInApplicationDomainAttribute()
     {
-      Name = AppDomainTestRunnerBase.DefaultAppDomainName;
+      Name = DefaultAppDomainName;
     }
 
-    /// <summary>
-    /// Executed before each test is run
-    /// </summary>
-    /// <param name="testDetails">Provides details about the test that is going to be run.</param>
-    public void BeforeTest(TestDetails testDetails)
+    /// <inheritdoc />
+    public override void BeforeTest(TestDetails testDetails)
     {
       // only continue execution if
       if (AppDomain.CurrentDomain.FriendlyName == Name)
         return;
 
+      RunInApplicationDomain(testDetails);
+    }
+
+    /// <summary>
+    ///  Check if we're in the "test" appdomain, and if we aren't, run the given test in an appdomain,
+    ///  capture the result, and propegate it back.
+    /// </summary>
+    private void RunInApplicationDomain(TestDetails testDetails)
+    {
       var testClassType = testDetails.Fixture != null
         ? testDetails.Fixture.GetType()
         : testDetails.Method.DeclaringType;
 
-      Exception exception = AppDomainRunner.Run(
-        Name,
-        testClassType.Assembly,
-        TestMethodInformation.CreateTestMethodInformation(testClassType, testDetails.Method));
+      var methodData = TestMethodInformation.CreateTestMethodInformation(testClassType, testDetails.Method);
+
+      Exception exception = AppDomainRunner.Run(Name, testClassType.Assembly, methodData);
 
       if (exception == null)
       {
@@ -55,21 +63,8 @@ namespace NUnit.Framework
       throw exception;
     }
 
-    /// <summary>
-    /// Executed after each test is run
-    /// </summary>
-    /// <param name="testDetails">Provides details about the test that has just been run.</param>
-    public void AfterTest(TestDetails testDetails)
-    {
-    }
-
-    /// <summary>
-    /// Provides the target for the action attribute
-    /// </summary>
-    /// <returns>
-    /// The target for the action attribute
-    /// </returns>
-    public ActionTargets Targets
+    /// <inheritdoc />
+    public override ActionTargets Targets
     {
       get { return ActionTargets.Test; }
     }
