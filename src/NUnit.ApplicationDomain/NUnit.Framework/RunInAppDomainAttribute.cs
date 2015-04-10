@@ -26,13 +26,14 @@ namespace NUnit.Framework
     /// </summary>
     private void RunInApplicationDomain(TestDetails testDetails)
     {
-      var testClassType = testDetails.Fixture != null
+      var typeUnderTest = testDetails.Fixture != null
         ? testDetails.Fixture.GetType()
         : testDetails.Method.DeclaringType;
 
-      var methodData = new TestMethodInformation(testClassType, testDetails.Method);
+      if (typeUnderTest == null)
+        throw new ArgumentException("Cannot determine the type that the test belongs to");
 
-      Exception exception = ParentAppDomainRunner.Run(AppDomainRunner.TestAppDomainName, methodData);
+      var exception = ParentAppDomainRunner.Run(typeUnderTest, testDetails.Method);
 
       if (exception == null)
       {

@@ -11,25 +11,30 @@ namespace NUnit.ApplicationDomain.Internal
   {
     /// <summary> Constructor. </summary>
     /// <exception cref="ArgumentNullException"> When one or more required arguments are null. </exception>
-    /// <param name="typeUnderTest"> The type that the method belongs to and which will be instantiated in the
-    ///  test app domain. </param>
-    /// <param name="method"> Name of the method to run. </param>
-    public TestMethodInformation(Type typeUnderTest, MethodBase method)
+    /// <exception cref="ArgumentException"> Thrown when one or more arguments have unsupported or
+    ///  illegal values. </exception>
+    /// <param name="typeUnderTest"> The type that the method belongs to and which will be
+    ///  instantiated in the test app domain. </param>
+    /// <param name="testMethod"> The method to invoke as the core unit of the test. </param>
+    /// <param name="methods"> The setup and teardown methods to invoke before/after running the test. </param>
+    public TestMethodInformation(Type typeUnderTest, MethodBase testMethod, SetupAndTeardownMethods methods)
     {
       if (typeUnderTest == null)
         throw new ArgumentNullException("typeUnderTest");
       if (!typeUnderTest.IsPublic)
         throw new ArgumentException("Class under test must be declared as public", "typeUnderTest");
-      if (method == null)
-        throw new ArgumentNullException("method");
-      if (method.DeclaringType == null)
-        throw new ArgumentNullException("method");
-
+      if (testMethod == null)
+        throw new ArgumentNullException("testMethod");
+      if (testMethod.DeclaringType == null)
+        throw new ArgumentNullException("testMethod");
+      if (methods == null)
+        throw new ArgumentNullException("methods");
 
       string configFile = FindConfigFile(Assembly.GetAssembly(typeUnderTest));
 
       TypeUnderTest = typeUnderTest;
-      MethodUnderTest = method;
+      MethodUnderTest = testMethod;
+      Methods = methods;
       AppConfigFile = configFile;
 
       OutputStream = Console.Out;
@@ -41,7 +46,7 @@ namespace NUnit.ApplicationDomain.Internal
     /// <summary>
     ///  The name of the class that contains the method to run in the application domain.
     /// </summary>
-    public Type TypeUnderTest { get; set; }
+    public Type TypeUnderTest { get; private set; }
 
     /// <summary> Gets or sets the name of the test. </summary>
     public MethodBase MethodUnderTest { get; private set; }
@@ -51,8 +56,11 @@ namespace NUnit.ApplicationDomain.Internal
     /// </summary>
     public object[] Arguments { get; private set; }
 
+    /// <summary> The setup and teardown methods to invoke before/after running the test. </summary>
+    public SetupAndTeardownMethods Methods { get; private set; }
+
     /// <summary> The app config file for the test. </summary>
-    public string AppConfigFile { get; set; }
+    public string AppConfigFile { get; private set; }
 
     /// <summary> System.Out. </summary>
     public TextWriter OutputStream { get; private set; }
