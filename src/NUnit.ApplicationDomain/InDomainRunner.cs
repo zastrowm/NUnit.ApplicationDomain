@@ -35,7 +35,7 @@ namespace NUnit.ApplicationDomain
 
       return ExecuteTestMethod(instance,
                                testMethodInfo.MethodUnderTest,
-                               testMethodInfo.Parameters,
+                               testMethodInfo.Arguments,
                                setupMethods,
                                teardownMethods);
     }
@@ -48,7 +48,7 @@ namespace NUnit.ApplicationDomain
     /// <param name="parameters"> The parameters, potentially set via TestCaseAttribute. </param>
     /// <param name="setupMethods"> The setup methods to invoke prior to invoking the test method. </param>
     /// <param name="teardownMethods"> The teardown methods to invoke prior to invoking the test
-    ///   method. </param>
+    ///  method. </param>
     /// <returns> Any exception that occurred while executing the test. </returns>
     private static Exception ExecuteTestMethod(object instance,
                                                MethodBase testMethod,
@@ -103,7 +103,7 @@ namespace NUnit.ApplicationDomain
                                          | BindingFlags.Public
                                          | BindingFlags.NonPublic;
 
-        // get only methods that do not have any parameters and have exactly one Setup method
+        // get only methods that do not have any parameters and have exactly one Setup attribute
         var methodsOnCurrentType = from method in typeUnderTest.GetMethods(searchFlags)
                                    where method.GetParameters().Length == 0
                                    let setupAttribute = (T[])method.GetCustomAttributes(typeof(T), false)

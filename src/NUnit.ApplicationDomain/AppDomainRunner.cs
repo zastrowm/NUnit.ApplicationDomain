@@ -12,6 +12,9 @@ namespace NUnit.ApplicationDomain
   /// <summary> Helps to run a test in another application domain. </summary>
   public static class AppDomainRunner
   {
+    /// <summary> The name of the app-domain in which tests are run. </summary>
+    public const string TestAppDomainName = " NUnit.ApplicationDomain ({9421D297-D477-4CEE-9C09-38BCC1AB5176})";
+
     /// <summary>
     ///  Returns true if the current test is being executed in an application domain created by the
     ///  <see cref="RunInApplicationDomainAttribute"/>
@@ -30,11 +33,10 @@ namespace NUnit.ApplicationDomain
 
     /// <summary> Runs a test in another application domain. </summary>
     /// <param name="testDomainName"> The name to assign to the application domain. </param>
-    /// <param name="assembly"> The assembly that contains the test to run. </param>
     /// <param name="testMethodInfo"> The arguments to pass to the runner inside the application
     ///  domain. </param>
     /// <returns> The exception that occurred in the test, or null if no exception occurred. </returns>
-    internal static Exception Run(string testDomainName, Assembly assembly, TestMethodInformation testMethodInfo)
+    internal static Exception Run(string testDomainName, TestMethodInformation testMethodInfo)
     {
       if (!testMethodInfo.TypeUnderTest.IsPublic)
         throw new InvalidOperationException("Class under test must be declared as public");
@@ -44,7 +46,7 @@ namespace NUnit.ApplicationDomain
       //set the path to the NUnit.ApplicationDomain assembly.
       info.ApplicationBase = Path.GetDirectoryName(new Uri(typeof(InDomainRunner).Assembly.EscapedCodeBase).LocalPath);
 
-      if (!string.IsNullOrEmpty(testMethodInfo.AppConfigFile))
+      if (!String.IsNullOrEmpty(testMethodInfo.AppConfigFile))
       {
         info.ConfigurationFile = testMethodInfo.AppConfigFile;
       }
@@ -55,10 +57,10 @@ namespace NUnit.ApplicationDomain
                                                 GetPermissionSet());
 
       // Add an assembly resolver for resolving any assemblies not known by the test application domain.
-      var ar = new AssemblyResolver(AppDomain.CurrentDomain);
-      domain.AssemblyResolve += ar.ResolveEventHandler;
+      var assemblyResolver = new AssemblyResolver(AppDomain.CurrentDomain);
+      domain.AssemblyResolve += assemblyResolver.ResolveEventHandler;
 
-      domain.Load(assembly.GetName());
+      domain.Load(testMethodInfo.TypeUnderTest.Assembly.GetName());
 
       var inDomainRunner = CreateInDomain<InDomainRunner>(domain);
 

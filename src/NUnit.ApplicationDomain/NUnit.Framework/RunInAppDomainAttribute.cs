@@ -9,23 +9,11 @@ namespace NUnit.Framework
   [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
   public class RunInApplicationDomainAttribute : TestActionAttribute
   {
-    /// <summary> The AppDomain name to use if the application domain is not explicitly specified. </summary>
-    public const string DefaultAppDomainName = "{9421D297-D477-4CEE-9C09-38BCC1AB5176}";
-
-    /// <summary> The name to give to the application domain in which the test should be run. </summary>
-    public string Name { get; private set; }
-
-    /// <summary> Constructor. </summary>
-    public RunInApplicationDomainAttribute()
-    {
-      Name = DefaultAppDomainName;
-    }
-
     /// <inheritdoc />
     public override void BeforeTest(TestDetails testDetails)
     {
       // only continue execution if
-      if (AppDomain.CurrentDomain.FriendlyName == Name)
+      if (AppDomain.CurrentDomain.FriendlyName == AppDomainRunner.TestAppDomainName)
         return;
 
       RunInApplicationDomain(testDetails);
@@ -41,9 +29,9 @@ namespace NUnit.Framework
         ? testDetails.Fixture.GetType()
         : testDetails.Method.DeclaringType;
 
-      var methodData = TestMethodInformation.CreateTestMethodInformation(testClassType, testDetails.Method);
+      var methodData = new TestMethodInformation(testClassType, testDetails.Method);
 
-      Exception exception = AppDomainRunner.Run(Name, testClassType.Assembly, methodData);
+      Exception exception = AppDomainRunner.Run(AppDomainRunner.TestAppDomainName, methodData);
 
       if (exception == null)
       {
