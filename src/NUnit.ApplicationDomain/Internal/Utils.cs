@@ -6,7 +6,7 @@ using System.Reflection;
 namespace NUnit.ApplicationDomain.Internal
 {
   /// <summary> Utility methods. </summary>
-  public static class Utils
+  internal static class Utils
   {
     /// <summary>
     ///  Get all methods in the type's hiearachy that have the designated attribute.

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using NUnit.ApplicationDomain;
 using NUnit.ApplicationDomain.Internal;
 
@@ -40,13 +41,22 @@ namespace NUnit.Framework
         Assert.Pass();
       }
 
-      if (exception is AssertionException)
+      if (AppDomainRunner.ShouldIncludeAppDomainErrorMessages)
       {
-        Console.Error.WriteLine("\nAssertion failed in Application Domain");
-      }
-      else
-      {
-        Console.Error.WriteLine("\nException thrown in application domain");
+        if (exception is AssertionException)
+        {
+          Console.Error.WriteLine();
+          Console.Error.WriteLine("======================================");
+          Console.Error.WriteLine("Assertion failed in Application Domain");
+          Console.Error.WriteLine("======================================");
+        }
+        else
+        {
+          Console.Error.WriteLine();
+          Console.Error.WriteLine("======================================");
+          Console.Error.WriteLine("Exception thrown in application domain");
+          Console.Error.WriteLine("======================================");
+        }
       }
 
       throw exception;

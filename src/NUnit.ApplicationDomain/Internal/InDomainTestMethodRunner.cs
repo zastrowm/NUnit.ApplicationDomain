@@ -45,6 +45,7 @@ namespace NUnit.ApplicationDomain.Internal
       }
       catch (TargetInvocationException e)
       {
+        // TODO when moving to .NET 4.5, find out if using ExceptionDispatchInfo.Capture helps at all. 
         exceptionCaught = e.InnerException;
       }
 
