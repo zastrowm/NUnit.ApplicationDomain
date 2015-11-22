@@ -10,7 +10,7 @@ namespace NUnit.ApplicationDomain.Tests
     public const int StartValue = 9;
     public static int Index = StartValue;
 
-    [TestFixtureSetUp]
+    [OneTimeSetUp]
     public void TestFixtureSetup()
     {
       if (!AppDomainRunner.IsInTestAppDomain)
@@ -19,7 +19,7 @@ namespace NUnit.ApplicationDomain.Tests
       Verify("Base TestFixtureSetup", 1);
     }
 
-    [TestFixtureTearDown]
+    [OneTimeTearDown]
     public void TestFixtureTeardown()
     {
       if (!AppDomainRunner.IsInTestAppDomain)
@@ -40,7 +40,7 @@ namespace NUnit.ApplicationDomain.Tests
   [RunInApplicationDomain]
   public class MultipleTestFixtureSetupAndTestFixtureTeardownTests : MultipleTestFixtureSetupAndTestFixtureTeardownTestsBase
   {
-    [TestFixtureSetUp]
+    [OneTimeSetUp]
     public new void TestFixtureSetup()
     {
       if (!AppDomainRunner.IsInTestAppDomain)
@@ -56,7 +56,7 @@ namespace NUnit.ApplicationDomain.Tests
       Verify("Test Method", 3);
     }
 
-    [TestFixtureTearDown]
+    [OneTimeTearDown]
     public new void TestFixtureTeardown()
     {
       if (!AppDomainRunner.IsInTestAppDomain)

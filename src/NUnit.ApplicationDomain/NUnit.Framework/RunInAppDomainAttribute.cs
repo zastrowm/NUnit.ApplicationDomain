@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using NUnit.ApplicationDomain;
 using NUnit.ApplicationDomain.Internal;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.Framework
 {
@@ -12,7 +13,7 @@ namespace NUnit.Framework
   public class RunInApplicationDomainAttribute : TestActionAttribute
   {
     /// <inheritdoc />
-    public override void BeforeTest(TestDetails testDetails)
+    public override void BeforeTest(ITest testDetails)
     {
       // only continue execution if
       if (AppDomain.CurrentDomain.FriendlyName == AppDomainRunner.TestAppDomainName)
@@ -25,16 +26,16 @@ namespace NUnit.Framework
     ///  Check if we're in the "test" appdomain, and if we aren't, run the given test in an appdomain,
     ///  capture the result, and propegate it back.
     /// </summary>
-    private void RunInApplicationDomain(TestDetails testDetails)
+    private void RunInApplicationDomain(ITest testDetails)
     {
       var typeUnderTest = testDetails.Fixture != null
-        ? testDetails.Fixture.GetType()
-        : testDetails.Method.DeclaringType;
+        ? testDetails.TypeInfo
+        : testDetails.Method.TypeInfo;
 
       if (typeUnderTest == null)
         throw new ArgumentException("Cannot determine the type that the test belongs to");
 
-      var exception = ParentAppDomainRunner.Run(typeUnderTest, testDetails.Method);
+      var exception = ParentAppDomainRunner.Run(typeUnderTest.Type, testDetails.Method.MethodInfo);
 
       if (exception == null)
       {

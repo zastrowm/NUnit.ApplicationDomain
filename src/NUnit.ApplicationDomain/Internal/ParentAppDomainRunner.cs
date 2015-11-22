@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Security;
 using System.Security.Policy;
 using NUnit.Framework;
+using System.Collections.Concurrent;
 
 namespace NUnit.ApplicationDomain.Internal
 {
@@ -13,12 +14,12 @@ namespace NUnit.ApplicationDomain.Internal
   internal static class ParentAppDomainRunner
   {
     /// <summary> The setup/teardown methods that have been cached for each type thus far. </summary>
-    private static readonly Dictionary<Type, SetupAndTeardownMethods> CachedInfo;
+    private static readonly ConcurrentDictionary<Type, SetupAndTeardownMethods> CachedInfo;
 
     /// <summary> Static constructor. </summary>
     static ParentAppDomainRunner()
     {
-      CachedInfo = new Dictionary<Type, SetupAndTeardownMethods>();
+      CachedInfo = new ConcurrentDictionary<Type, SetupAndTeardownMethods>();
     }
 
     /// <summary> Runs the given test for the given type under a new, clean app domain. </summary>
@@ -86,18 +87,18 @@ namespace NUnit.ApplicationDomain.Internal
         return setupAndTeardown;
 
       // get all of the setup methods in the type
-      var setupMethods = typeUnderTest.GetMethodsWithAttribute<TestFixtureSetUpAttribute>();
+      var setupMethods = typeUnderTest.GetMethodsWithAttribute<OneTimeSetUpAttribute>();
       setupMethods.AddRange(typeUnderTest.GetMethodsWithAttribute<SetUpAttribute>());
 
       // we want most-derived last
       setupMethods.Reverse();
 
       // get all of the teardown methods in the type (it is already the way we want it).
-      var teardownMethods = typeUnderTest.GetMethodsWithAttribute<TestFixtureTearDownAttribute>();
+      var teardownMethods = typeUnderTest.GetMethodsWithAttribute<OneTimeTearDownAttribute>();
       teardownMethods.AddRange(typeUnderTest.GetMethodsWithAttribute<TearDownAttribute>());
 
       setupAndTeardown = new SetupAndTeardownMethods(setupMethods, teardownMethods);
-      CachedInfo.Add(typeUnderTest, setupAndTeardown);
+      CachedInfo.TryAdd(typeUnderTest, setupAndTeardown);
 
       return setupAndTeardown;
     }

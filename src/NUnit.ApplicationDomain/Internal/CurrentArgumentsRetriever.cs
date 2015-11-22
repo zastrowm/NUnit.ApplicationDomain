@@ -36,11 +36,11 @@ namespace NUnit.ApplicationDomain.Internal
       var currentTest = currentContext.CurrentTest;
       Type currentTestType = currentTest.GetType();
 
-      var argumentsField = currentTestType.GetField(
-        "arguments",
-        BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetField);
+      var argumentsField = currentTestType.GetProperty(
+        "Arguments",
+        BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetProperty);
 
-      return argumentsField.GetValue(currentTest);
+      return argumentsField.GetValue(currentTest, null);
     }
 
     /// <summary>
@@ -51,9 +51,9 @@ namespace NUnit.ApplicationDomain.Internal
     private static PropertyInfo FindCurrentContextProperty()
     {
       var types = from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                  where assembly.FullName.Contains("nunit.core")
+                  where assembly.FullName.Contains("nunit.framework")
                   from type in assembly.GetTypes()
-                  where type.FullName == "NUnit.Core.TestExecutionContext"
+                  where type.FullName == "NUnit.Framework.Internal.TestExecutionContext"
                   select type;
 
       var textExecutionContextType = types.FirstOrDefault();

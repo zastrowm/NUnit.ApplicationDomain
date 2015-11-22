@@ -19,7 +19,7 @@ namespace NUnit.ApplicationDomain.Tests
       Verify("Base Setup", 1);
     }
 
-    [TestFixtureSetUp]
+    [OneTimeSetUp]
     public void TestFixtureSetup()
     {
       if (!AppDomainRunner.IsInTestAppDomain)
@@ -28,7 +28,7 @@ namespace NUnit.ApplicationDomain.Tests
       Verify("Base TestFixtureSetup", 3);
     }
 
-    [TestFixtureTearDown]
+    [OneTimeTearDown]
     public void TestFixtureTeardown()
     {
       if (!AppDomainRunner.IsInTestAppDomain)
@@ -67,7 +67,7 @@ namespace NUnit.ApplicationDomain.Tests
       Verify("Derived Setup", 2);
     }
 
-    [TestFixtureSetUp]
+    [OneTimeSetUp]
     public new void TestFixtureSetup()
     {
       if (!AppDomainRunner.IsInTestAppDomain)
@@ -95,7 +95,7 @@ namespace NUnit.ApplicationDomain.Tests
       Verify("Test Method", 5);
     }
 
-    [TestFixtureTearDown]
+    [OneTimeTearDown]
     public new void TestFixtureTeardown()
     {
       if (!AppDomainRunner.IsInTestAppDomain)
