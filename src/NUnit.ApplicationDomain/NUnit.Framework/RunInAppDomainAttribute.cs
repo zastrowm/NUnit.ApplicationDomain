@@ -22,7 +22,7 @@ namespace NUnit.Framework
 
     /// <summary>
     ///  Check if we're in the "test" appdomain, and if we aren't, run the given test in an appdomain,
-    ///  capture the result, and propegate it back.
+    ///  capture the result, and propagate it back.
     /// </summary>
     private void RunInApplicationDomain(ITest testDetails)
     {
@@ -67,8 +67,6 @@ namespace NUnit.Framework
 
     /// <inheritdoc />
     public override ActionTargets Targets
-    {
-      get { return ActionTargets.Test; }
-    }
+      => ActionTargets.Test;
   }
 }

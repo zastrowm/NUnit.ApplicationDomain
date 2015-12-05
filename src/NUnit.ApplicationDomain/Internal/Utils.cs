@@ -9,10 +9,10 @@ namespace NUnit.ApplicationDomain.Internal
   internal static class Utils
   {
     /// <summary>
-    ///  Get all methods in the type's hiearachy that have the designated attribute.
+    ///  Get all methods in the type's hierarchy that have the designated attribute.
     /// </summary>
     /// <returns>
-    ///  Returns methods further down in the type hiearachy first, followed by each subsequent type's
+    ///  Returns methods further down in the type hierarchy first, followed by each subsequent type's
     ///  parents' methods.
     /// </returns>
     public static List<MethodInfo> GetMethodsWithAttribute<T>(this Type typeUnderTest)

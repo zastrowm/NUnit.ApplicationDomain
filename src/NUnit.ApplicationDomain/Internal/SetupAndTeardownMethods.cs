@@ -15,18 +15,18 @@ namespace NUnit.ApplicationDomain.Internal
     public SetupAndTeardownMethods(IEnumerable<MethodBase> setupMethods, IEnumerable<MethodBase> teardownMethods)
     {
       if (setupMethods == null)
-        throw new ArgumentNullException("setupMethods");
+        throw new ArgumentNullException(nameof(setupMethods));
       if (teardownMethods == null)
-        throw new ArgumentNullException("teardownMethods");
+        throw new ArgumentNullException(nameof(teardownMethods));
 
       SetupMethods = setupMethods;
       TeardownMethods = teardownMethods;
     }
 
     /// <summary> The setup methods for the current test. </summary>
-    public IEnumerable<MethodBase> SetupMethods { get; private set; }
+    public IEnumerable<MethodBase> SetupMethods { get; }
 
     /// <summary> The teardown methods for the current test. </summary>
-    public IEnumerable<MethodBase> TeardownMethods { get; private set; }
+    public IEnumerable<MethodBase> TeardownMethods { get; }
   }
 }

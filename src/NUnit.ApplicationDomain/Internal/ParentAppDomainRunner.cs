@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -6,7 +7,6 @@ using System.Reflection;
 using System.Security;
 using System.Security.Policy;
 using NUnit.Framework;
-using System.Collections.Concurrent;
 
 namespace NUnit.ApplicationDomain.Internal
 {
@@ -32,9 +32,9 @@ namespace NUnit.ApplicationDomain.Internal
     public static Exception Run(Type typeUnderTest, MethodInfo testMethod)
     {
       if (testMethod == null)
-        throw new ArgumentNullException("testMethod");
+        throw new ArgumentNullException(nameof(testMethod));
       if (typeUnderTest == null)
-        throw new ArgumentNullException("typeUnderTest");
+        throw new ArgumentNullException(nameof(typeUnderTest));
 
       var setupAndTeardown = GetSetupTeardownMethods(typeUnderTest);
 
@@ -45,7 +45,6 @@ namespace NUnit.ApplicationDomain.Internal
                    // At a minimum, we want the ability to load the types defined in this assembly
                    ApplicationBase = GetDirectoryToMyDll()
                  };
-
 
       if (!String.IsNullOrEmpty(methodData.AppConfigFile))
       {

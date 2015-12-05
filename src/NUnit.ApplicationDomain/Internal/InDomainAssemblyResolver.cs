@@ -55,9 +55,8 @@ namespace NUnit.ApplicationDomain.Internal
         return assembly;
       }
 
-      Debug.WriteLine("Unknown assembly to be loaded: '{0}', requested by '{1}'",
-                      args.Name,
-                      args.RequestingAssembly);
+      Debug.WriteLine($"Unknown assembly to be loaded: '{args.Name}', requested by '{args.RequestingAssembly}'");
+
       return null;
     }
   }

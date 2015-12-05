@@ -29,9 +29,7 @@ namespace NUnit.Framework
     /// </summary>
     /// <remarks> Equivalent to !IsInTestAppDomain. </remarks>
     public static bool IsNotInTestAppDomain
-    {
-      get { return !IsInTestAppDomain; }
-    }
+      => !IsInTestAppDomain;
 
     /// <summary>
     ///  True if messages should be printed to standard output when a test failure occurs while in the

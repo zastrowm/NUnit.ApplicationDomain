@@ -19,7 +19,7 @@ namespace NUnit.ApplicationDomain.Internal
     public static object[] GetCurrentTestArguments()
     {
       // we don't cache the rest of the getters, because we're not sure if the properties actually
-      // change or not throughout the lifecycle, so for safety we we-reflect every time. 
+      // change or not throughout the lifecycle, so for safety we re-reflect every time. 
       var currentTest = TestExecutionContext.CurrentContext.CurrentTest;
 
       Type currentTestType = currentTest.GetType();

@@ -8,7 +8,7 @@ namespace NUnit.ApplicationDomain.Internal
 {
   /// <summary> Helps to resolve the types in another app domain. </summary>
   /// <remarks>
-  ///  The methods are invoked and marshalled from the test app domain into the original domain.
+  ///  The methods are invoked and marshaled from the test app domain into the original domain.
   /// </remarks>
   [Serializable]
   internal class ResolveHelper : MarshalByRefObject
