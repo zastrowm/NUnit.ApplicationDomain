@@ -155,3 +155,4 @@ ehthumbs.db
 Desktop.ini
 *.nupkg
 NuGet.exe
+*.orig
