@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using NUnit.ApplicationDomain;
 using NUnit.ApplicationDomain.Internal;
 using NUnit.Framework.Interfaces;
 
@@ -44,7 +42,11 @@ namespace NUnit.Framework
 
       if (AppDomainRunner.ShouldIncludeAppDomainErrorMessages)
       {
-        if (exception is AssertionException)
+        if (exception is SuccessException)
+        {
+          // don't output anything in case of success
+        }
+        else if (exception is AssertionException)
         {
           Console.Error.WriteLine();
           Console.Error.WriteLine("======================================");
