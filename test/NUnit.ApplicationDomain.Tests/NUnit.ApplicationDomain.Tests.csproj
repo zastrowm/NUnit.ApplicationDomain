@@ -48,6 +48,7 @@
     <Compile Include="AbstractClassesWork.cs" />
     <Compile Include="CheckStackTraceTests.cs" />
     <Compile Include="ReferencedClassTests.cs" />
+    <Compile Include="STAThreadVerificationTest.cs" />
     <Compile Include="TestMethodParametersTests.cs" />
     <Compile Include="TestFixtureSetupAndSetupTests.cs" />
     <Compile Include="MultipleTestFixtureSetupAndTestFixtureTeardownTests.cs" />
