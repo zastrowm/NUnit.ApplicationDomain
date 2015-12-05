@@ -16,6 +16,7 @@
     <DocumentationFile>..\..\bin\$(Configuration)\$(AssemblyName)\$(AssemblyName).XML</DocumentationFile>
     <OutputPath>..\..\bin\$(Configuration)\$(AssemblyName)</OutputPath>
     <IntermediateOutputPath>..\..\bin\obj\$(Configuration)\$(AssemblyName)</IntermediateOutputPath>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
