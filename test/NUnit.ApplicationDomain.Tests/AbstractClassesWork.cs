@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using NUnit.Framework;
 
 namespace NUnit.ApplicationDomain.Tests
 {
   public abstract class TestsBase
   {
-    [Test, RunInApplicationDomainAttribute]
+    [Test, RunInApplicationDomain]
     public void SomeTest()
     {
     }
@@ -19,7 +18,7 @@ namespace NUnit.ApplicationDomain.Tests
   [TestFixture]
   public class ActualTestClass : TestsBase
   {
-    [Test, RunInApplicationDomainAttribute]
+    [Test, RunInApplicationDomain]
     [Description("Each test is in different appdomain, even works in abstract classes")]
     public void Test1()
     {
@@ -30,7 +29,7 @@ namespace NUnit.ApplicationDomain.Tests
       Console.WriteLine("In Application domain");
     }
 
-    [Test, RunInApplicationDomainAttribute]
+    [Test, RunInApplicationDomain]
     [Description("Each test is in different appdomain, even works in abstract classes")]
     public void Test2()
     {

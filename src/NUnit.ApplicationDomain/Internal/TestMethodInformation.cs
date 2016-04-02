@@ -21,9 +21,6 @@ namespace NUnit.ApplicationDomain.Internal
     {
       if (typeUnderTest == null)
         throw new ArgumentNullException(nameof(typeUnderTest));
-      if (!typeUnderTest.IsPublic)
-        throw new ArgumentException($"Class under test ('{typeUnderTest.Name}') must be declared as public",
-                                    nameof(typeUnderTest));
       if (testMethod == null)
         throw new ArgumentNullException(nameof(testMethod));
       if (testMethod.DeclaringType == null)
