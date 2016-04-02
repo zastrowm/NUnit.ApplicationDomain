@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security;
+using System.Security.Permissions;
 using System.Security.Policy;
 using NUnit.Framework;
 
@@ -107,12 +108,7 @@ namespace NUnit.ApplicationDomain.Internal
     /// </summary>
     private static PermissionSet GetPermissionSet()
     {
-      //create an evidence of type zone
-      var ev = new Evidence();
-      ev.AddHostEvidence(new Zone(SecurityZone.MyComputer));
-
-      //return the PermissionSets specific to the type of zone
-      return SecurityManager.GetStandardSandbox(ev);
+      return new PermissionSet(PermissionState.Unrestricted);
     }
   }
 }
