@@ -17,7 +17,7 @@ namespace NUnit.Framework
     /// <typeparam name="T"> The type of object to retrieve. </typeparam>
     /// <param name="key"> The key of the object to retrieve. </param>
     /// <returns> An object. </returns>
-    public object Get<T>(string key)
+    public T Get<T>(string key)
     {
       return (T)_lookup[key];
     }
