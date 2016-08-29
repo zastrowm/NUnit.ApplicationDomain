@@ -15,6 +15,8 @@ namespace NUnit.ApplicationDomain.Internal
     /// <returns> The exception that occurred as a result of executing the method. </returns>
     public Exception Execute(TestMethodInformation testMethodInfo)
     {
+      AppDomainRunner.HiddenDataStore = testMethodInfo.DataStore;
+
       // Forward this data from the outside application domain
       Console.SetOut(testMethodInfo.OutputStream);
       Console.SetError(testMethodInfo.ErrorStream);

@@ -65,6 +65,7 @@
     <Compile Include="NUnit.Framework\RunInAppDomainAttribute.cs" />
     <Compile Include="Internal\TestMethodInformation.cs" />
     <Compile Include="Internal\InDomainTestMethodRunner.cs" />
+    <Compile Include="NUnit.Framework\SharedDataStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

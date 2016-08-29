@@ -6,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 using System.Security;
 using System.Security.Permissions;
-using System.Security.Policy;
 using NUnit.Framework;
 
 namespace NUnit.ApplicationDomain.Internal
@@ -39,7 +38,7 @@ namespace NUnit.ApplicationDomain.Internal
 
       var setupAndTeardown = GetSetupTeardownMethods(typeUnderTest);
 
-      var methodData = new TestMethodInformation(typeUnderTest, testMethod, setupAndTeardown);
+      var methodData = new TestMethodInformation(typeUnderTest, testMethod, setupAndTeardown, AppDomainRunner.DataStore);
 
       var info = new AppDomainSetup
                  {

@@ -51,6 +51,7 @@
     <Compile Include="CheckStackTraceTests.cs" />
     <Compile Include="InternalClass.cs" />
     <Compile Include="ReferencedClassTests.cs" />
+    <Compile Include="SharedDataStoreFlowTests.cs" />
     <Compile Include="STAThreadVerificationTest.cs" />
     <Compile Include="TestMethodParametersTests.cs" />
     <Compile Include="TestFixtureSetupAndSetupTests.cs" />

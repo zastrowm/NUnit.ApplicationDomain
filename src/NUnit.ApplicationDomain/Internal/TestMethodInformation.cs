@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using NUnit.Framework;
 
 namespace NUnit.ApplicationDomain.Internal
 {
@@ -17,7 +18,11 @@ namespace NUnit.ApplicationDomain.Internal
     ///  instantiated in the test app domain. </param>
     /// <param name="testMethod"> The method to invoke as the core unit of the test. </param>
     /// <param name="methods"> The setup and teardown methods to invoke before/after running the test. </param>
-    public TestMethodInformation(Type typeUnderTest, MethodBase testMethod, SetupAndTeardownMethods methods)
+    /// <param name="dataStore"> The data store to install into the test AppDomain. </param>
+    public TestMethodInformation(Type typeUnderTest,
+                                 MethodBase testMethod,
+                                 SetupAndTeardownMethods methods,
+                                 SharedDataStore dataStore)
     {
       if (typeUnderTest == null)
         throw new ArgumentNullException(nameof(typeUnderTest));
@@ -33,6 +38,7 @@ namespace NUnit.ApplicationDomain.Internal
       TypeUnderTest = typeUnderTest;
       MethodUnderTest = testMethod;
       Methods = methods;
+      DataStore = dataStore;
       AppConfigFile = configFile;
 
       OutputStream = Console.Out;
@@ -56,6 +62,9 @@ namespace NUnit.ApplicationDomain.Internal
 
     /// <summary> The setup and teardown methods to invoke before/after running the test. </summary>
     public SetupAndTeardownMethods Methods { get; }
+
+    /// <summary>  The data store to install into the test AppDomain. </summary>
+    public SharedDataStore DataStore { get; set; }
 
     /// <summary> The app config file for the test. </summary>
     public string AppConfigFile { get; }
