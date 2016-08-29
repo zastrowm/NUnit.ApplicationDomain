@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>NUnit.ApplicationDomain</id>
-        <version>7.0.0</version>
+        <version>8.0.0</version>
         <title>NUnit Application Domain Runner</title>
         <authors>Mackenzie Zastrow</authors>
         <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
@@ -10,9 +10,14 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Run NUnit tests in a separate application domain.</description>
         <summary>Allows running NUnit tests in a separate application domain.</summary>
-        <copyright>2015 Mackenzie Zastrow</copyright>
+        <copyright>2016 Mackenzie Zastrow</copyright>
         <tags>nunit, appdomain</tags>
         <releaseNotes>
+## Version 8.0.0
+ - Fix: Always run all teardown methods, even when the test method threw an exception
+ - Add the ability to share data between the parent-domain and the test domain
+   via AppDomainRunner.DataStore
+          
 ## Version 7.0.0
  - Strong name the assembly
  - Add support for Mono (based on changes from Frederik Carlier)
