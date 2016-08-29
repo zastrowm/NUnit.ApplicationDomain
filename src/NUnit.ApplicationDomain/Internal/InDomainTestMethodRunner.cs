@@ -27,31 +27,59 @@ namespace NUnit.ApplicationDomain.Internal
 
       Exception exceptionCaught = null;
 
+      // mark this test as being in the app domain.  As soon as we're done, we're going to tear down
+      // the app domain, so there is no need to set this back to false. 
+      AppDomainRunner.IsInTestAppDomain = true;
+
+      // run setup and test, with an exception handler
+      exceptionCaught = RunSetupAndTest(testMethodInfo, instance);
+      var teardownException = RunTeardown(testMethodInfo, instance);
+
+      return exceptionCaught ?? teardownException;
+    }
+
+    /// <summary> Runs the setup and test method, returning the exception that occurred or null if no exception was fired. </summary>
+    private static Exception RunSetupAndTest(TestMethodInformation testMethodInfo, object instance)
+    {
       try
       {
-        // mark this test as being in the app domain.  As soon as we're done, we're going to tear down
-        // the app domain, so there is no need to set this back to false. 
-        AppDomainRunner.IsInTestAppDomain = true;
-
         foreach (var setupMethod in testMethodInfo.Methods.SetupMethods)
         {
           setupMethod.Invoke(instance, null);
         }
 
         testMethodInfo.MethodUnderTest.Invoke(instance, testMethodInfo.Arguments);
-
-        foreach (var teardownMethod in testMethodInfo.Methods.TeardownMethods)
-        {
-          teardownMethod.Invoke(instance, null);
-        }
       }
       catch (TargetInvocationException e)
       {
-        // TODO when moving to .NET 4.5, find out if using ExceptionDispatchInfo.Capture helps at all. 
-        exceptionCaught = e.InnerException;
+        return e.InnerException;
       }
 
-      return exceptionCaught;
+      return null;
+    }
+
+    /// <summary> Run each teardown method, returning the first exception that occured, if any. </summary>
+    private static Exception RunTeardown(TestMethodInformation testMethodInfo, object instance)
+    {
+      Exception exception = null;
+
+      foreach (var teardownMethod in testMethodInfo.Methods.TeardownMethods)
+      {
+        try
+        {
+          teardownMethod.Invoke(instance, null);
+        }
+        catch (TargetInvocationException e)
+        {
+          // we only save the first exception
+          if (exception == null)
+          {
+            exception = e.InnerException;
+          }
+        }
+      }
+
+      return exception;
     }
   }
 }

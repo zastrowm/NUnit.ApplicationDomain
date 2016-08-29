@@ -38,7 +38,7 @@ namespace NUnit.ApplicationDomain.Tests
         AppDomainRunner.DataStore.Set("test", true);
       }
 
-      Assert.Fail("Teardown should still be run");
+      Assert.Pass("Teardown should still be run");
     }
 
     [TearDown]
@@ -46,11 +46,13 @@ namespace NUnit.ApplicationDomain.Tests
     {
       if (AppDomainRunner.IsInTestAppDomain)
       {
+        // in the test domain, we always set this so that the not-test domain can verify
         AppDomainRunner.DataStore.Set("teardown", true);
       }
 
       if (AppDomainRunner.IsNotInTestAppDomain)
       {
+        // we should have always hit all 3 conditions
         bool didRunSetup = AppDomainRunner.DataStore.Get<bool>("setup");
         bool didRunTest = AppDomainRunner.DataStore.Get<bool>("test");
         bool didRunTeardown = AppDomainRunner.DataStore.Get<bool>("teardown");
