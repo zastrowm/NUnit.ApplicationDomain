@@ -35,7 +35,7 @@ public void MyTest()
 
 Use the `AppDomainRunner.IsInTestAppDomain` method to detect if code with side-effects should be executed. 
 This is especially useful in the setup and teardown methods, as those methods are invoked both in the "normal"
-appdomain and the "test" app domain:
+app domain and the "test" app domain:
 
 ````
 #!csharp
@@ -49,6 +49,53 @@ public void Setup()
   File.WriteAllText("fake.txt", "a file");
 }
 ````
+
+## AppDomainRunner.DataStore
+
+Use `AppDomainRunner.DataStore` as a way of passing data back and forth between the "normal" app domain and the "test" app domain:
+
+
+````
+#!csharp
+internal class TestContextTests
+{
+  [SetUp]
+  public void Setup()
+  {
+    // accessing TestContext.CurrentContext.TestDirectory from the app domain will throw an
+    // exception but we need the test directory, so we pass it in via the data store. 
+    if (!AppDomainRunner.IsInTestAppDomain)
+    {
+      AppDomainRunner.DataStore.Set("TestDirectory", TestContext.CurrentContext.TestDirectory);
+    }
+  }
+
+  [Test, RunInApplicationDomain]
+  public void VerifyItFails()
+  {
+    var testDirectory = AppDomainRunner.DataStore.Get<string>("TestDirectory");
+    Console.WriteLine($"The test directory is: {testDirectory}");
+
+    // we can also pass data back into the "normal" domain
+    AppDomainRunner.DataStore.Set("ShouldBeSetFromAppDomain", testDirectory);
+  }
+
+  [TearDown]
+  public void Teardown()
+  {
+    // okay, make sure everything worked properly now
+    if (!AppDomainRunner.IsInTestAppDomain)
+    {
+      var testDirectory = AppDomainRunner.DataStore.Get<string>("ShouldBeSetFromAppDomain");
+
+      // this should have been set by the test app-domain
+      Assert.That(testDirectory, Is.EqualTo(TestContext.CurrentContext.TestDirectory));
+    }
+  }
+}
+````
+
+This can be especially useful for verifying that something occurred in the app domain or for adding information that can't be accessed from the test app domain such as the members on `TestContext.CurrentContext`.
 
 # Gotchas
 
