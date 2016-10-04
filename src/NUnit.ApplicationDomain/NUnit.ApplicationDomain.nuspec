@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>NUnit.ApplicationDomain</id>
-        <version>8.0.0</version>
+        <version>$version$</version>
         <title>NUnit Application Domain Runner</title>
         <authors>Mackenzie Zastrow</authors>
         <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
@@ -13,6 +13,9 @@
         <copyright>2016 Mackenzie Zastrow</copyright>
         <tags>nunit, appdomain</tags>
         <releaseNotes>
+## Version 9.0.0
+ - Fix: Unload test app-domains after use in order to lower resource usage (John Lewin)         
+
 ## Version 8.0.0
  - Fix: Always run all teardown methods, even when the test method threw an exception
  - Add the ability to share data between the parent-domain and the test domain

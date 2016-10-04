@@ -1,6 +1,6 @@
 ﻿{
   // Enable this if you need to build package from the nuspec file instead of the project file.
-  "UseNuspecFileOnly": true,
+  "UseNuspecFileOnly": false,
 
   // Determines if a package containing sources and symbols should be created.
   // When specified with a nuspec, creates a regular NuGet package file and the corresponding symbols package
