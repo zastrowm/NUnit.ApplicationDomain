@@ -64,7 +64,14 @@ namespace NUnit.ApplicationDomain.Internal
 
       var inDomainRunner = domain.CreateInstanceAndUnwrap<InDomainTestMethodRunner>();
 
-      return inDomainRunner.Execute(methodData);
+      // Store any resulting exception from executing the test method
+      var result = inDomainRunner.Execute(methodData);
+
+      // Unload the AppDomain after use
+      AppDomain.Unload(domain);
+
+      // Return the result
+      return result;
     }
 
     private static string GetDirectoryToMyDll()
