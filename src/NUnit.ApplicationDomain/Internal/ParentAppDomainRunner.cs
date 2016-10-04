@@ -65,13 +65,13 @@ namespace NUnit.ApplicationDomain.Internal
       var inDomainRunner = domain.CreateInstanceAndUnwrap<InDomainTestMethodRunner>();
 
       // Store any resulting exception from executing the test method
-      var result = inDomainRunner.Execute(methodData);
+      var possibleException = inDomainRunner.Execute(methodData);
 
-      // Unload the AppDomain after use
+      // if we don't unload, it's possible that execution continues in the AppDomain, consuming CPU/
+      // memory.  See more info @ https://bitbucket.org/zastrowm/nunit.applicationdomain/pull-requests/1/ 
       AppDomain.Unload(domain);
 
-      // Return the result
-      return result;
+      return possibleException;
     }
 
     private static string GetDirectoryToMyDll()
