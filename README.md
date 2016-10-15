@@ -102,6 +102,50 @@ There are a couple things that you should know about the way the tests run:
 * Only the test method, the setup method, and the test method will be called.  Any extra NUnit parameters (such as ExpectedException, or RequiresSTA) will not be honored (if you want/needs support of this, create an issue).
 * The setup and teardown methods are invoked **both normally and in the app domain**.  This results in the setup and teardown methods being called twice. It is advised to use `AppDomainRunner.IsInTestAppDomain` property to mitigate this problem.
 
+## Tests Returning Tasks
+
+`NUnit 3.0` introduced [better] support for async tests (tests that return a Task).  The way `NUnit.ApplicationDomain` is implemented requires the library to somehow block until the test is completed before running the TearDown.  It does this [by default] by invoking `.Wait()` on the returned task.
+
+If you need to block via some other mechnism (for example using a `Dispatcher`, or pumping some sort of message thread) you can implement `IAsyncTestResultHandler` on your test class and then block using your own mechnism:
+
+```
+#!csharp
+[Test]
+public async Task WaitsForDispatcherToContinue()
+{
+  // pretend that for some made-up reason, we need to be in the event loop 
+  await Dispatcher.Yield();
+
+  // and pretend that something later triggers that allows us to complete
+  await Task.Delay(TimeSpan.FromSeconds(3));
+
+  AppDomainRunner.DataStore.Set<bool>("ran", true);
+}
+
+[TearDown]
+public void Teardown()
+{
+  Assert.That(AppDomainRunner.DataStore.Get<bool>("ran"), Is.True);
+}
+
+/// <inheritdoc />
+void IAsyncTestResultHandler.Process(Task task)
+{
+  // if we just simply did task.Wait(), we would block indefinitely because no-one is message
+  // pumping. 
+
+  // instead, tell the dispatcher to run until the task has resolved
+  var frame = new DispatcherFrame();
+  task.ContinueWith(_1 => frame.Continue = false);
+  Dispatcher.PushFrame(frame);
+
+  // propagate any exceptions
+  task.Wait();
+}
+```
+
+Full test/example is [implemented as a test](https://bitbucket.org/zastrowm/nunit.applicationdomain/src/master/test/NUnit.ApplicationDomain.Tests/AsyncTestWithDispatcherRunner.cs?fileviewer=file-view-default).
+
 # (Obsolete) AppDomainTestRunnerBase
 
 Alternatively, if you don't like using attributes, you can derive your test class from `AppDomainTestRunnerBase`:
