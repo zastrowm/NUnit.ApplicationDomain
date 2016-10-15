@@ -145,28 +145,3 @@ void IAsyncTestResultHandler.Process(Task task)
 ```
 
 Full test/example is [implemented as a test](https://bitbucket.org/zastrowm/nunit.applicationdomain/src/master/test/NUnit.ApplicationDomain.Tests/AsyncTestWithDispatcherRunner.cs?fileviewer=file-view-default).
-
-# (Obsolete) AppDomainTestRunnerBase
-
-Alternatively, if you don't like using attributes, you can derive your test class from `AppDomainTestRunnerBase`:
-
-````
-#!csharp
-public class AllTheTests : AppDomainTestRunnerBase
-````
-
-Then in your test methods, call `RunInDomain`:
-
-````
-#!csharp
-[Test]
-public void TestMethod()
-{
-  RunInAppDomain()
-
-  // this code runs in the app domain
-}
-````
-
-Code before the call to `RunInDomain` runs in the main application domain and in the test application domain.  Only the code after the call to `RunInDomain` runs in the application domain.
-
