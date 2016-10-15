@@ -62,7 +62,7 @@
     <Compile Include="SharedDataStoreFlowTests.cs" />
     <Compile Include="STAThreadVerificationTest.cs" />
     <Compile Include="TeardownAlwaysCalled.cs" />
-    <Compile Include="TestMethodParametersTests.cs" />
+    <Compile Include="ArgumentsFlowIntoAppDomainTests.cs" />
     <Compile Include="TestFixtureSetupAndSetupTests.cs" />
     <Compile Include="MultipleTestFixtureSetupAndTestFixtureTeardownTests.cs" />
     <Compile Include="MultipleSetupAndTeardownTests.cs" />
