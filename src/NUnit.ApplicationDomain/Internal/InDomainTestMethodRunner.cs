@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace NUnit.ApplicationDomain.Internal
@@ -48,7 +49,12 @@ namespace NUnit.ApplicationDomain.Internal
           setupMethod.Invoke(instance, null);
         }
 
-        testMethodInfo.MethodUnderTest.Invoke(instance, testMethodInfo.Arguments);
+        var taskResult = testMethodInfo.MethodUnderTest.Invoke(instance, testMethodInfo.Arguments) as Task;
+        if (taskResult != null)
+        {
+          var handler = CreateAsyncTestResultHandler(instance);
+          handler.Process(taskResult);
+        }
       }
       catch (TargetInvocationException e)
       {
@@ -58,7 +64,17 @@ namespace NUnit.ApplicationDomain.Internal
       return null;
     }
 
-    /// <summary> Run each teardown method, returning the first exception that occured, if any. </summary>
+    /// <summary>
+    ///  Creates the <see cref="IAsyncTestResultHandler"/> to handle an
+    ///  async test result.
+    /// </summary>
+    private static IAsyncTestResultHandler CreateAsyncTestResultHandler(object instance)
+    {
+      return instance as IAsyncTestResultHandler
+             ?? new TaskWaitTestResultHandler();
+    }
+
+    /// <summary> Run each teardown method, returning the first exception that occurred, if any. </summary>
     private static Exception RunTeardown(TestMethodInformation testMethodInfo, object instance)
     {
       Exception exception = null;

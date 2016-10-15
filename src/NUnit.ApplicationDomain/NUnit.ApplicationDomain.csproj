@@ -58,6 +58,8 @@
     <Compile Include="Internal\ResolveHelper.cs" />
     <Compile Include="Internal\SetupAndTeardownMethods.cs" />
     <Compile Include="Internal\Utils.cs" />
+    <Compile Include="NUnit.ApplicationDomain\AppDomainAsyncTestUtilities.cs" />
+    <Compile Include="NUnit.ApplicationDomain\TaskWaitTestResultHandler.cs" />
     <Compile Include="NUnit.Framework\AppDomainRunner.cs" />
     <Compile Include="Internal\InDomainAssemblyResolver.cs" />
     <Compile Include="Internal\CurrentArgumentsRetriever.cs" />
