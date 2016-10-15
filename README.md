@@ -9,13 +9,9 @@ PM> Install-Package NUnit.ApplicationDomain
 
 # Introduction
 
-Sometimes when creating a library, you need to have a static initializer, property, or field.
-Unfortunately, testing static things isn't easy - you can't easily control when the objects
-are created, and you can't tell them to "uncreate" themselves so you can test it again.
+Sometimes when creating a library, you need to have a static initializer, property, or field. Unfortunately, testing static things isn't easy - you can't easily control when the objects are created, and you can't tell them to "uncreate" themselves so you can test it again.
 
-[NUnit.ApplicationDomain][nuget] attempts to solve this problem by running a test in a
-separate app domain, isolating the static initializer to only that domain.  At the end of 
-the test, the app domain is destroyed and the next test can get a new app domain for a clean environment.
+[NUnit.ApplicationDomain][nuget] attempts to solve this problem by running a test in a separate app domain, isolating the static initializer to only that domain.  At the end of the test, the app domain is destroyed and the next test can get a new app domain for a clean environment.
 
 # How To
 
@@ -103,11 +99,8 @@ There are a couple things that you should know about the way the tests run:
 
 * The class containing the test method must be **public**
 * The class containing the test method must have a **parameterless constuctor**
-* Only the test method, the setup method, and the test method will be called.  Any extra NUnit parameters (such as
-  ExpectedException, or RequiresSTA) will not be honored (if you want/needs support of this, create an issue).
-* The setup and teardown methods are invoked **both normally and in the app domain**.  This results in the setup and
-  teardown methods being called twice. It is advised to use `AppDomainRunner.IsInTestAppDomain` property to mitigate
-  this problem.
+* Only the test method, the setup method, and the test method will be called.  Any extra NUnit parameters (such as ExpectedException, or RequiresSTA) will not be honored (if you want/needs support of this, create an issue).
+* The setup and teardown methods are invoked **both normally and in the app domain**.  This results in the setup and teardown methods being called twice. It is advised to use `AppDomainRunner.IsInTestAppDomain` property to mitigate this problem.
 
 # (Obsolete) AppDomainTestRunnerBase
 
