@@ -47,11 +47,13 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractClassesWork.cs" />
     <Compile Include="AsyncTests.cs" />
     <Compile Include="AsyncTestWithCustomRunner.cs" />
+    <Compile Include="AsyncTestWithDispatcherRunner.cs" />
     <Compile Include="TestContextTests.cs" />
     <Compile Include="AppConfigTests.cs" />
     <Compile Include="CheckStackTraceTests.cs" />
