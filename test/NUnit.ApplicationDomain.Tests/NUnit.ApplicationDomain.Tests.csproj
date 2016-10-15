@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractClassesWork.cs" />
+    <Compile Include="AsyncTests.cs" />
     <Compile Include="TestContextTests.cs" />
     <Compile Include="AppConfigTests.cs" />
     <Compile Include="CheckStackTraceTests.cs" />
