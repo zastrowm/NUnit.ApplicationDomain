@@ -24,7 +24,15 @@ namespace NUnit.ApplicationDomain.Internal
 
       Type typeUnderTest = testMethodInfo.TypeUnderTest;
 
-      object instance = Activator.CreateInstance(typeUnderTest);
+      object instance;
+      if (testMethodInfo.FixtureArguments == null)
+      {
+          instance = Activator.CreateInstance(typeUnderTest);
+      }
+      else
+      {
+          instance = Activator.CreateInstance(typeUnderTest, testMethodInfo.FixtureArguments);
+      }
 
       Exception exceptionCaught = null;
 

@@ -25,7 +25,8 @@ namespace NUnit.ApplicationDomain.Internal
     public TestMethodInformation(Type typeUnderTest,
                                  MethodBase testMethod,
                                  SetupAndTeardownMethods methods,
-                                 SharedDataStore dataStore)
+                                 SharedDataStore dataStore,
+                                 object [] fixtureArguments)
     {
       if (typeUnderTest == null)
         throw new ArgumentNullException(nameof(typeUnderTest));
@@ -48,6 +49,7 @@ namespace NUnit.ApplicationDomain.Internal
       ErrorStream = Console.Error;
 
       Arguments = CurrentArgumentsRetriever.GetCurrentTestArguments();
+      FixtureArguments = fixtureArguments;
     }
 
     /// <summary>
@@ -62,6 +64,11 @@ namespace NUnit.ApplicationDomain.Internal
     ///  Any additional parameters to give to the test method, normally set via TestCaseAttribute.
     /// </summary>
     public object[] Arguments { get; }
+
+    /// <summary>
+    ///  Parameters to give to the test constructor, normally set via TestFixtureAttribute.
+    /// </summary>
+    public object[] FixtureArguments { get; }
 
     /// <summary> The setup and teardown methods to invoke before/after running the test. </summary>
     public SetupAndTeardownMethods Methods { get; }
