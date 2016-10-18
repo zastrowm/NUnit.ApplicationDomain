@@ -19,14 +19,11 @@ namespace NUnit.ApplicationDomain.Internal
     /// <param name="testMethod"> The method to invoke as the core unit of the test. </param>
     /// <param name="methods"> The setup and teardown methods to invoke before/after running the test. </param>
     /// <param name="dataStore"> The data store to install into the test AppDomain. </param>
-    /// <param name="asyncMethodHandlerType"> The type of
-    ///  <see cref="IAsyncTestResultHandler"/> to construct if an task
-    ///  returning test method is encountered. </param>
     public TestMethodInformation(Type typeUnderTest,
                                  MethodBase testMethod,
                                  SetupAndTeardownMethods methods,
                                  SharedDataStore dataStore,
-                                 object [] fixtureArguments)
+                                 object[] fixtureArguments)
     {
       if (typeUnderTest == null)
         throw new ArgumentNullException(nameof(typeUnderTest));

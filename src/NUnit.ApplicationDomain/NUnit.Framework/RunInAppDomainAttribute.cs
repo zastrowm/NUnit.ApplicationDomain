@@ -72,14 +72,14 @@ namespace NUnit.Framework
       throw exception;
     }
 
-        private Internal.TestFixture FindFixture(ITest test)
-        {
-            if (test == null)
-                return null;
-            if (test is Internal.TestFixture)
-                return (Internal.TestFixture)test;
-            return FindFixture(test.Parent);
-        }
+    private Internal.TestFixture FindFixture(ITest test)
+    {
+      if (test == null)
+        return null;
+      if (test is Internal.TestFixture)
+        return (Internal.TestFixture)test;
+      return FindFixture(test.Parent);
+    }
 
     /// <inheritdoc />
     public override ActionTargets Targets

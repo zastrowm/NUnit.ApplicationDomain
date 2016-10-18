@@ -27,11 +27,11 @@ namespace NUnit.ApplicationDomain.Internal
       object instance;
       if (testMethodInfo.FixtureArguments == null)
       {
-          instance = Activator.CreateInstance(typeUnderTest);
+        instance = Activator.CreateInstance(typeUnderTest);
       }
       else
       {
-          instance = Activator.CreateInstance(typeUnderTest, testMethodInfo.FixtureArguments);
+        instance = Activator.CreateInstance(typeUnderTest, testMethodInfo.FixtureArguments);
       }
 
       Exception exceptionCaught = null;
