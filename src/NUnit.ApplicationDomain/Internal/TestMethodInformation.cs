@@ -19,12 +19,14 @@ namespace NUnit.ApplicationDomain.Internal
     /// <param name="testMethod"> The method to invoke as the core unit of the test. </param>
     /// <param name="methods"> The setup and teardown methods to invoke before/after running the test. </param>
     /// <param name="dataStore"> The data store to install into the test AppDomain. </param>
-    /// <param name="fixtureArguments"> The arguments to use when constructing the test fixture. </param>
+    /// <param name="testArguments"> The arguments to pass into the test method. </param>
+    /// <param name="testFixtureArguments"> The arguments to use when constructing the test fixture. </param>
     public TestMethodInformation(Type typeUnderTest,
                                  MethodBase testMethod,
                                  SetupAndTeardownMethods methods,
                                  SharedDataStore dataStore,
-                                 object[] fixtureArguments)
+                                 object[] testArguments,
+                                 object[] testFixtureArguments)
     {
       if (typeUnderTest == null)
         throw new ArgumentNullException(nameof(typeUnderTest));
@@ -46,8 +48,8 @@ namespace NUnit.ApplicationDomain.Internal
       OutputStream = Console.Out;
       ErrorStream = Console.Error;
 
-      Arguments = CurrentArgumentsRetriever.GetCurrentTestArguments();
-      FixtureArguments = fixtureArguments;
+      Arguments = testArguments;
+      FixtureArguments = testFixtureArguments;
     }
 
     /// <summary>

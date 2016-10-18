@@ -3,10 +3,10 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Security;
 using System.Security.Permissions;
 using NUnit.Framework;
+using NUnit.Framework.Interfaces;
 
 namespace NUnit.ApplicationDomain.Internal
 {
@@ -24,26 +24,35 @@ namespace NUnit.ApplicationDomain.Internal
 
     /// <summary> Runs the given test for the given type under a new, clean app domain. </summary>
     /// <exception cref="ArgumentNullException"> Thrown when one or more required arguments are null. </exception>
-    /// <param name="typeUnderTest"> The type that is currently under test. </param>
-    /// <param name="testMethod"> The test method to invoke as the test. </param>
-    /// <param name="fixtureArguments"> The arguments to use when constructing the test fixture. </param>
+    /// <exception cref="ArgumentException"> Thrown when one or more arguments have unsupported or
+    ///  illegal values. </exception>
+    /// <param name="test"> The test that should be run in another app-domain. </param>
     /// <returns>
     ///  The exception that occurred while executing the test, or null if no exception was generated.
     /// </returns>
-    public static Exception Run(Type typeUnderTest, MethodInfo testMethod, object[] fixtureArguments)
+    public static Exception Run(ITest test)
     {
-      if (testMethod == null)
-        throw new ArgumentNullException(nameof(testMethod));
-      if (typeUnderTest == null)
-        throw new ArgumentNullException(nameof(typeUnderTest));
+      if (test == null)
+        throw new ArgumentNullException(nameof(test));
 
-      var setupAndTeardown = GetSetupTeardownMethods(typeUnderTest);
+      var typeInfo = test.Fixture != null
+        ? test.TypeInfo
+        : test.Method.TypeInfo;
 
-      var methodData = new TestMethodInformation(typeUnderTest,
-                                                 testMethod,
+      if (typeInfo == null)
+        throw new ArgumentException("Cannot determine the type that the test belongs to");
+
+      var setupAndTeardown = GetSetupTeardownMethods(typeInfo.Type);
+
+      var testArguments = CurrentArgumentsRetriever.GetTestArguments(test);
+      var testFixtureArguments = CurrentArgumentsRetriever.GetTestFixtureArguments(test);
+
+      var methodData = new TestMethodInformation(typeInfo.Type,
+                                                 test.Method.MethodInfo,
                                                  setupAndTeardown,
                                                  AppDomainRunner.DataStore,
-                                                 fixtureArguments);
+                                                 testArguments,
+                                                 testFixtureArguments);
 
       var info = new AppDomainSetup
                  {

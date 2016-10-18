@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.ApplicationDomain.Internal;
 using NUnit.Framework.Interfaces;
-using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
@@ -27,16 +26,7 @@ namespace NUnit.Framework
     /// </summary>
     private void RunInApplicationDomain(ITest testDetails)
     {
-      var typeUnderTest = testDetails.Fixture != null
-        ? testDetails.TypeInfo
-        : testDetails.Method.TypeInfo;
-
-      object[] args = FindFixture(testDetails)?.Arguments;
-
-      if (typeUnderTest == null)
-        throw new ArgumentException("Cannot determine the type that the test belongs to");
-
-      var exception = ParentAppDomainRunner.Run(typeUnderTest.Type, testDetails.Method.MethodInfo, args);
+      var exception = ParentAppDomainRunner.Run(testDetails);
 
       if (exception == null)
       {
@@ -71,18 +61,5 @@ namespace NUnit.Framework
     /// <inheritdoc />
     public override ActionTargets Targets
       => ActionTargets.Test;
-
-    /// <summary> Finds the test fixture associated with the given test. </summary>
-    private static TestFixture FindFixture(ITest test)
-    {
-      if (test == null)
-        return null;
-
-      var fixture = test as TestFixture;
-      if (fixture != null)
-        return fixture;
-
-      return FindFixture(test.Parent);
-    }
   }
 }
