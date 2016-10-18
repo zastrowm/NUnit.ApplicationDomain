@@ -98,7 +98,6 @@ This can be especially useful for verifying that something occurred in the app d
 There are a couple things that you should know about the way the tests run:
 
 * The class containing the test method must be **public**
-* The class containing the test method must have a **parameterless constuctor**
 * Only the test method, the setup method, and the test method will be called.  Any extra NUnit parameters (such as ExpectedException, or RequiresSTA) will not be honored (if you want/needs support of this, create an issue).
 * The setup and teardown methods are invoked **both normally and in the app domain**.  This results in the setup and teardown methods being called twice. It is advised to use `AppDomainRunner.IsInTestAppDomain` property to mitigate this problem.
 
