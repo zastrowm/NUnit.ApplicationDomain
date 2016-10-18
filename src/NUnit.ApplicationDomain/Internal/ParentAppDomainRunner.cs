@@ -30,7 +30,7 @@ namespace NUnit.ApplicationDomain.Internal
     /// <returns>
     ///  The exception that occurred while executing the test, or null if no exception was generated.
     /// </returns>
-    public static Exception Run(Type typeUnderTest, MethodInfo testMethod)
+    public static Exception Run(Type typeUnderTest, MethodInfo testMethod, object[] fixtureArguments)
     {
       if (testMethod == null)
         throw new ArgumentNullException(nameof(testMethod));
@@ -42,7 +42,8 @@ namespace NUnit.ApplicationDomain.Internal
       var methodData = new TestMethodInformation(typeUnderTest,
                                                  testMethod,
                                                  setupAndTeardown,
-                                                 AppDomainRunner.DataStore);
+                                                 AppDomainRunner.DataStore,
+                                                 fixtureArguments);
 
       var info = new AppDomainSetup
                  {

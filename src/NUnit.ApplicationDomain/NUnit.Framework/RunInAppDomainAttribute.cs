@@ -30,10 +30,17 @@ namespace NUnit.Framework
         ? testDetails.TypeInfo
         : testDetails.Method.TypeInfo;
 
+      object[] args = null;
+      var fixture = FindFixture(testDetails);
+      if (fixture != null)
+      {
+        args = fixture.Arguments;
+      }
+
       if (typeUnderTest == null)
         throw new ArgumentException("Cannot determine the type that the test belongs to");
 
-      var exception = ParentAppDomainRunner.Run(typeUnderTest.Type, testDetails.Method.MethodInfo);
+      var exception = ParentAppDomainRunner.Run(typeUnderTest.Type, testDetails.Method.MethodInfo, args);
 
       if (exception == null)
       {
@@ -64,6 +71,15 @@ namespace NUnit.Framework
 
       throw exception;
     }
+
+        private Internal.TestFixture FindFixture(ITest test)
+        {
+            if (test == null)
+                return null;
+            if (test is Internal.TestFixture)
+                return (Internal.TestFixture)test;
+            return FindFixture(test.Parent);
+        }
 
     /// <inheritdoc />
     public override ActionTargets Targets
