@@ -19,6 +19,7 @@ namespace NUnit.ApplicationDomain.Internal
     /// <param name="testMethod"> The method to invoke as the core unit of the test. </param>
     /// <param name="methods"> The setup and teardown methods to invoke before/after running the test. </param>
     /// <param name="dataStore"> The data store to install into the test AppDomain. </param>
+    /// <param name="fixtureArguments"> The arguments to use when constructing the test fixture. </param>
     public TestMethodInformation(Type typeUnderTest,
                                  MethodBase testMethod,
                                  SetupAndTeardownMethods methods,

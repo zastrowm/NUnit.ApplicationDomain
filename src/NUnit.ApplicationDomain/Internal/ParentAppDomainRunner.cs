@@ -26,6 +26,7 @@ namespace NUnit.ApplicationDomain.Internal
     /// <exception cref="ArgumentNullException"> Thrown when one or more required arguments are null. </exception>
     /// <param name="typeUnderTest"> The type that is currently under test. </param>
     /// <param name="testMethod"> The test method to invoke as the test. </param>
+    /// <param name="fixtureArguments"> The arguments to use when constructing the test fixture. </param>
     /// <returns>
     ///  The exception that occurred while executing the test, or null if no exception was generated.
     /// </returns>

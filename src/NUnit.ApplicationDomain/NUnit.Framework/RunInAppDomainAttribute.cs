@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.ApplicationDomain.Internal;
 using NUnit.Framework.Interfaces;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
@@ -30,12 +31,7 @@ namespace NUnit.Framework
         ? testDetails.TypeInfo
         : testDetails.Method.TypeInfo;
 
-      object[] args = null;
-      var fixture = FindFixture(testDetails);
-      if (fixture != null)
-      {
-        args = fixture.Arguments;
-      }
+      object[] args = FindFixture(testDetails)?.Arguments;
 
       if (typeUnderTest == null)
         throw new ArgumentException("Cannot determine the type that the test belongs to");
@@ -72,17 +68,21 @@ namespace NUnit.Framework
       throw exception;
     }
 
-    private Internal.TestFixture FindFixture(ITest test)
-    {
-      if (test == null)
-        return null;
-      if (test is Internal.TestFixture)
-        return (Internal.TestFixture)test;
-      return FindFixture(test.Parent);
-    }
-
     /// <inheritdoc />
     public override ActionTargets Targets
       => ActionTargets.Test;
+
+    /// <summary> Finds the test fixture associated with the given test. </summary>
+    private static TestFixture FindFixture(ITest test)
+    {
+      if (test == null)
+        return null;
+
+      var fixture = test as TestFixture;
+      if (fixture != null)
+        return fixture;
+
+      return FindFixture(test.Parent);
+    }
   }
 }
