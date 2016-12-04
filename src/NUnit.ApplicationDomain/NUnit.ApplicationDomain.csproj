@@ -59,13 +59,16 @@
     <Compile Include="Internal\SetupAndTeardownMethods.cs" />
     <Compile Include="Internal\Utils.cs" />
     <Compile Include="NUnit.ApplicationDomain\AppDomainAsyncTestUtilities.cs" />
+    <Compile Include="NUnit.ApplicationDomain\ConstructedAppDomainInformation.cs" />
+    <Compile Include="NUnit.ApplicationDomain\DefaultAppDomainFactory.cs" />
+    <Compile Include="NUnit.ApplicationDomain\IAppDomainFactory.cs" />
     <Compile Include="NUnit.ApplicationDomain\TaskWaitTestResultHandler.cs" />
     <Compile Include="NUnit.Framework\AppDomainRunner.cs" />
     <Compile Include="Internal\InDomainAssemblyResolver.cs" />
     <Compile Include="Internal\CurrentArgumentsRetriever.cs" />
     <Compile Include="Internal\ParentAppDomainRunner.cs" />
     <Compile Include="NUnit.Framework\RunInAppDomainAttribute.cs" />
-    <Compile Include="Internal\TestMethodInformation.cs" />
+    <Compile Include="NUnit.ApplicationDomain\TestMethodInformation.cs" />
     <Compile Include="Internal\InDomainTestMethodRunner.cs" />
     <Compile Include="NUnit.Framework\SharedDataStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

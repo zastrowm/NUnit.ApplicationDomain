@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Security;
 using System.Security.Permissions;
@@ -14,13 +13,11 @@ namespace NUnit.ApplicationDomain.Internal
   internal static class ParentAppDomainRunner
   {
     /// <summary> The setup/teardown methods that have been cached for each type thus far. </summary>
-    private static readonly ConcurrentDictionary<Type, SetupAndTeardownMethods> CachedInfo;
+    private static readonly ConcurrentDictionary<Type, SetupAndTeardownMethods> CachedInfo
+      = new ConcurrentDictionary<Type, SetupAndTeardownMethods>();
 
-    /// <summary> Static constructor. </summary>
-    static ParentAppDomainRunner()
-    {
-      CachedInfo = new ConcurrentDictionary<Type, SetupAndTeardownMethods>();
-    }
+    private static readonly DefaultAppDomainFactory DefaultFactory
+      = new DefaultAppDomainFactory();
 
     /// <summary> Runs the given test for the given type under a new, clean app domain. </summary>
     /// <exception cref="ArgumentNullException"> Thrown when one or more required arguments are null. </exception>
@@ -54,21 +51,8 @@ namespace NUnit.ApplicationDomain.Internal
                                                  testArguments,
                                                  testFixtureArguments);
 
-      var info = new AppDomainSetup
-                 {
-                   // At a minimum, we want the ability to load the types defined in this assembly
-                   ApplicationBase = GetDirectoryToMyDll()
-                 };
-
-      if (!String.IsNullOrEmpty(methodData.AppConfigFile))
-      {
-        info.ConfigurationFile = methodData.AppConfigFile;
-      }
-
-      AppDomain domain = AppDomain.CreateDomain(AppDomainRunner.TestAppDomainName,
-                                                null,
-                                                info,
-                                                GetPermissionSet());
+      var domainInfo = DefaultFactory.GetAppDomainFor(methodData);
+      var domain = domainInfo.AppDomain;
 
       // Add an assembly resolver for resolving any assemblies not known by the test application domain.
       var assemblyResolver = new InDomainAssemblyResolver(new ResolveHelper());
@@ -81,16 +65,9 @@ namespace NUnit.ApplicationDomain.Internal
       // Store any resulting exception from executing the test method
       var possibleException = inDomainRunner.Execute(methodData);
 
-      // if we don't unload, it's possible that execution continues in the AppDomain, consuming CPU/
-      // memory.  See more info @ https://bitbucket.org/zastrowm/nunit.applicationdomain/pull-requests/1/ 
-      AppDomain.Unload(domain);
+      domainInfo.Owner.MarkFinished(domainInfo);
 
       return possibleException;
-    }
-
-    private static string GetDirectoryToMyDll()
-    {
-      return Path.GetDirectoryName(new Uri(typeof(InDomainTestMethodRunner).Assembly.EscapedCodeBase).LocalPath);
     }
 
     /// <summary> Gets the setup and teardown methods for the given type. </summary>
