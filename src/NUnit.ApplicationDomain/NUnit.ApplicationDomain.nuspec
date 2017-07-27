@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>NUnit.ApplicationDomain</id>
-        <version>10.2.0</version>
+        <version>11.0.0</version>
         <title>NUnit Application Domain Runner</title>
         <authors>Mackenzie Zastrow</authors>
         <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
@@ -10,9 +10,12 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Run NUnit tests in a separate application domain.</description>
         <summary>Allows running NUnit tests in a separate application domain.</summary>
-        <copyright>2016 Mackenzie Zastrow</copyright>
+        <copyright>2017 Mackenzie Zastrow</copyright>
         <tags>nunit, appdomain</tags>
         <releaseNotes>
+## Version 11.0.0
+ - Add support for (and a dependency on) NUnit 3.7.0
+
 ## Version 10.2.0
  - Add support for app-domain factories, allowing the constructed app-domain to 
    be customized.
@@ -66,7 +69,7 @@
 Initial Release</releaseNotes>
     <dependencies>
         <group targetFramework=".NETFramework4.0">
-            <dependency id="NUnit" version="3.2.0" />
+            <dependency id="NUnit" version="3.7.0" />
         </group>
     </dependencies>
     </metadata>

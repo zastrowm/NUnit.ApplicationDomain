@@ -13,23 +13,13 @@ namespace NUnit.ApplicationDomain.Internal
   internal static class CurrentArgumentsRetriever
   {
     /// <summary>
-    ///  Attempts to get the arguments for the current executing test by using reflection to get at  
-    ///  <code>NUnit.Core.TestExecutionContext.CurrentContext.arguments</code>
+    ///  Attempts to get the arguments for the current executing test.  Used to use reflection but was
+    ///  exposed publicly in NUnit 3.7.
     /// </summary>
     /// <param name="test"> Gets the tests that were passed into method for the given test. </param>
     /// <returns> The current arguments for the test, or null of none are available. </returns>
-    public static object[] GetTestArguments(ITest test)
-    {
-      // we don't cache the rest of the getters, because we're not sure if the properties actually
-      // change or not throughout the lifecycle, so for safety we re-reflect every time. 
-      Type currentTestType = test.GetType();
-
-      var argumentsField = currentTestType.GetProperty(
-        "Arguments",
-        BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetProperty | BindingFlags.Public);
-
-      return (object[])argumentsField.GetValue(test, null);
-    }
+    public static object[] GetTestArguments(ITest test) 
+      => test.Arguments;
 
     /// <summary>
     ///  Gets the test-fixture arguments that were used to construct the test fixture associated with
