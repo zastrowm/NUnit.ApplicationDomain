@@ -24,6 +24,10 @@ namespace NUnit.ApplicationDomain.Internal
 
       Type typeUnderTest = testMethodInfo.TypeUnderTest;
 
+      // mark this test as being in the app domain.  As soon as we're done, we're going to tear down
+      // the app domain, so there is no need to set this back to false. 
+      AppDomainRunner.IsInTestAppDomain = true;
+
       object instance;
       if (testMethodInfo.FixtureArguments == null)
       {
@@ -35,10 +39,6 @@ namespace NUnit.ApplicationDomain.Internal
       }
 
       Exception exceptionCaught = null;
-
-      // mark this test as being in the app domain.  As soon as we're done, we're going to tear down
-      // the app domain, so there is no need to set this back to false. 
-      AppDomainRunner.IsInTestAppDomain = true;
 
       // run setup and test, with an exception handler
       exceptionCaught = RunSetupAndTest(testMethodInfo, instance);

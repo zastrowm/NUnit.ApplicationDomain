@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using NUnit.ApplicationDomain;
 using NUnit.ApplicationDomain.Internal;
 using NUnit.Framework.Interfaces;
 
@@ -10,6 +11,12 @@ namespace NUnit.Framework
   [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class)]
   public class RunInApplicationDomainAttribute : TestActionAttribute
   {
+    /// <summary>
+    ///  The app-domain factory to use when constructing app domains.  Must be an instance of
+    ///  <see cref="IAppDomainFactory"/>
+    /// </summary>
+    public Type AppDomainFactory { get; set; }
+
     /// <inheritdoc />
     public override void BeforeTest(ITest testDetails)
     {
@@ -26,7 +33,7 @@ namespace NUnit.Framework
     /// </summary>
     private void RunInApplicationDomain(ITest testDetails)
     {
-      var exception = ParentAppDomainRunner.Run(testDetails);
+      var exception = ParentAppDomainRunner.Run(testDetails, AppDomainFactory);
 
       if (exception == null)
       {

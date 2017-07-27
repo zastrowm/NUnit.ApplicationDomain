@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>NUnit.ApplicationDomain</id>
-        <version>10.1.0-beta1</version>
+        <version>10.2.0</version>
         <title>NUnit Application Domain Runner</title>
         <authors>Mackenzie Zastrow</authors>
         <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
@@ -13,6 +13,10 @@
         <copyright>2016 Mackenzie Zastrow</copyright>
         <tags>nunit, appdomain</tags>
         <releaseNotes>
+## Version 10.2.0
+ - Add support for app-domain factories, allowing the constructed app-domain to 
+   be customized.
+          
 ## Version 10.1.0
  - Add support for parameterized test fixtures (rubenhak)
           

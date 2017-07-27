@@ -55,6 +55,7 @@
     <Compile Include="AsyncTests.cs" />
     <Compile Include="AsyncTestWithCustomRunner.cs" />
     <Compile Include="AsyncTestWithDispatcherRunner.cs" />
+    <Compile Include="FactoryTests.cs" />
     <Compile Include="TestContextTests.cs" />
     <Compile Include="AppConfigTests.cs" />
     <Compile Include="CheckStackTraceTests.cs" />

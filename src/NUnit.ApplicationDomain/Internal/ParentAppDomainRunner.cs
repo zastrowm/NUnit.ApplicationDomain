@@ -16,21 +16,24 @@ namespace NUnit.ApplicationDomain.Internal
     private static readonly ConcurrentDictionary<Type, SetupAndTeardownMethods> CachedInfo
       = new ConcurrentDictionary<Type, SetupAndTeardownMethods>();
 
-    private static readonly DefaultAppDomainFactory DefaultFactory
-      = new DefaultAppDomainFactory();
+    private static readonly PerTestAppDomainFactory DefaultFactory
+      = new PerTestAppDomainFactory();
 
     /// <summary> Runs the given test for the given type under a new, clean app domain. </summary>
     /// <exception cref="ArgumentNullException"> Thrown when one or more required arguments are null. </exception>
     /// <exception cref="ArgumentException"> Thrown when one or more arguments have unsupported or
     ///  illegal values. </exception>
     /// <param name="test"> The test that should be run in another app-domain. </param>
+    /// <param name="appDomainFactoryType"> The type of factory to use to construct app-domains. </param>
     /// <returns>
     ///  The exception that occurred while executing the test, or null if no exception was generated.
     /// </returns>
-    public static Exception Run(ITest test)
+    public static Exception Run(ITest test, Type appDomainFactoryType)
     {
       if (test == null)
         throw new ArgumentNullException(nameof(test));
+
+      var appDomainFactory = ConstructFactory(appDomainFactoryType);
 
       var typeInfo = test.Fixture != null
         ? test.TypeInfo
@@ -51,7 +54,7 @@ namespace NUnit.ApplicationDomain.Internal
                                                  testArguments,
                                                  testFixtureArguments);
 
-      var domainInfo = DefaultFactory.GetAppDomainFor(methodData);
+      var domainInfo = appDomainFactory.GetAppDomainFor(methodData);
       var domain = domainInfo.AppDomain;
 
       // Add an assembly resolver for resolving any assemblies not known by the test application domain.
@@ -68,6 +71,25 @@ namespace NUnit.ApplicationDomain.Internal
       domainInfo.Owner.MarkFinished(domainInfo);
 
       return possibleException;
+    }
+
+    /// <summary>
+    ///  Construct the <see cref="IAppDomainFactory"/> from the given type, throwing out if the type
+    ///  is not an instance of
+    ///  <see cref="IAppDomainFactory"/>.
+    /// </summary>
+    private static IAppDomainFactory ConstructFactory(Type typeToConstruct)
+    {
+      if (typeToConstruct == null)
+        return DefaultFactory;
+
+      var instance = Activator.CreateInstance(typeToConstruct);
+      var factory = instance as IAppDomainFactory;
+      if (factory == null)
+        throw new InvalidOperationException(
+                $"Cannot specify an AppDomainFactory that is not an instance of ${nameof(IAppDomainFactory)}");
+
+      return factory;
     }
 
     /// <summary> Gets the setup and teardown methods for the given type. </summary>
