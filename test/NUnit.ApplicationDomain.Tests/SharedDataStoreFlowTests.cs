@@ -5,7 +5,6 @@ using NUnit.Framework;
 
 namespace NUnit.ApplicationDomain.Tests
 {
-  [RunInApplicationDomain]
   internal class SharedDataStoreFlowTests1
   {
     private const string StringKey = "A.String.Key";
@@ -20,7 +19,7 @@ namespace NUnit.ApplicationDomain.Tests
       }
     }
 
-    [Test]
+    [Test, RunInApplicationDomain]
     public void GetSerialiableValueInTest_Works()
     {
       var actualStringValue = AppDomainRunner.DataStore.Get<string>(StringKey);
@@ -28,13 +27,12 @@ namespace NUnit.ApplicationDomain.Tests
     }
   }
 
-  [RunInApplicationDomain]
   internal class SharedDataStoreFlowTests2
   {
     private const string StringKey = "A.String.Key";
     private const string StringValue = "A.String.Value";
 
-    [Test]
+    [Test, RunInApplicationDomain]
     public void SetSerialiableValueInTest_Works()
     {
       AppDomainRunner.DataStore.Set(StringKey, StringValue);
@@ -48,7 +46,6 @@ namespace NUnit.ApplicationDomain.Tests
     }
   }
 
-  [RunInApplicationDomain]
   internal class SharedDataStoreFlowTests3
   {
     private const string MarshallKey = "A.Marshall.Key";
@@ -62,7 +59,7 @@ namespace NUnit.ApplicationDomain.Tests
       }
     }
 
-    [Test]
+    [Test, RunInApplicationDomain]
     public void GetMarshallByValueInTest_Works()
     {
       var actualStringValue = AppDomainRunner.DataStore.Get<MarshallByRefFakeClass>(MarshallKey);
