@@ -26,7 +26,7 @@ namespace NUnit.ApplicationDomain.Internal
 
       var argumentsField = currentTestType.GetProperty(
         "Arguments",
-        BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetProperty);
+        BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.GetProperty | BindingFlags.Public);
 
       return (object[])argumentsField.GetValue(test, null);
     }
