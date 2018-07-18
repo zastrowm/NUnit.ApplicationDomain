@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NUnit.Framework.Internal;
 
 namespace NUnit.Framework
 {
@@ -54,7 +55,7 @@ namespace NUnit.Framework
           // in the parent domain, we store it in the current test info.
           SharedDataStore properties;
 
-          var propertyBag = TestContext.CurrentContext.Test.Properties;
+          var propertyBag = TestExecutionContext.CurrentContext.CurrentTest.Properties;
           if (propertyBag.ContainsKey(PropertyBagKeyForSharedProperties))
           {
             properties = (SharedDataStore)propertyBag.Get(PropertyBagKeyForSharedProperties);
@@ -62,8 +63,7 @@ namespace NUnit.Framework
           else
           {
             properties = new SharedDataStore();
-            var propertyBag1 = TestContext.CurrentContext.Test.Properties;
-            propertyBag1.Set(PropertyBagKeyForSharedProperties, properties);
+            propertyBag.Set(PropertyBagKeyForSharedProperties, properties);
           }
 
           return properties;

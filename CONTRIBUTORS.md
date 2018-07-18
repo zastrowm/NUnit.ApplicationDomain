@@ -6,3 +6,4 @@ These people have contributed to NUnit.ApplicationDomain's design and implementa
  - [Frederik Carlier](https://github.com/qmfrederik) - added support for Mono
  - [John Lewin](https://bitbucket.org/john_lewin/) - unload the domain after use
  - [rubenhak](https://bitbucket.org/rubenhak/) - added support for parameterized test fixtures
+ - [Brandon Ording](https://github.com/bording) - added support for NUnit 3.10.1+
