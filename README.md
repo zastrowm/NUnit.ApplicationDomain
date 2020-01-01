@@ -17,6 +17,28 @@ Sometimes when creating a library, you need to have a static initializer, proper
 
 First, include the `NUnit.ApplicationDomain` nuget package.  Then decorate your test method with the `RunInApplicationDomainAttribute`.
 
+** *Important Note* **
+
+If you're not using the same version of NUnit as the library expects (3.7.0) you need to apply a binding redirect via `app.config` to your test library.  If you do not, test runners may report 0 test executions.
+
+Example `app.config`:
+
+```
+#!xml
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <runtime>
+    <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
+      <dependentAssembly>
+        <assemblyIdentity name="nunit.framework"
+                          publicKeyToken="2638cd05610744eb"/>
+        <bindingRedirect oldVersion="3.7.0.0" newVersion="3.12.0.0" />
+      </dependentAssembly>
+    </assemblyBinding>
+  </runtime>
+</configuration>
+```
+
 ## RunInApplicationDomainAttribute
 
 The `RunInApplicationDomain` attribute runs that test method in its separate app domain.  Just put it on your test method:
