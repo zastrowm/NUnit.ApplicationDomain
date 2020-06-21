@@ -1,11 +1,13 @@
-[Nuget Package][nuget]
+[![NuGet](https://img.shields.io/nuget/v/NUnit.ApplicationDomain.svg)](NUnit.ApplicationDomain)
 
-````
-#!bash
+````bash
 PM> Install-Package NUnit.ApplicationDomain
 ````
 
-[nuget]: https://nuget.org/packages/NUnit.ApplicationDomain
+*Now on [GitHub][] instead of [Bitbucket][]!*
+
+[bitbucket]: https://bitbucket.org/zastrowm/nunit.applicationdomain_bitbucket
+[github]: https://github.com/zastrowm/NUnit.ApplicationDomain
 
 # Introduction
 
@@ -23,8 +25,7 @@ If you're not using the same version of NUnit as the library expects (3.7.0) you
 
 Example `app.config`:
 
-```
-#!xml
+```xml
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
   <runtime>
@@ -43,8 +44,7 @@ Example `app.config`:
 
 The `RunInApplicationDomain` attribute runs that test method in its separate app domain.  Just put it on your test method:
 
-````
-#!csharp
+````csharp
 [Test, RunInApplicationDomain]
 public void MyTest()
 ````
@@ -55,8 +55,7 @@ Use the `AppDomainRunner.IsInTestAppDomain` method to detect if code with side-e
 This is especially useful in the setup and teardown methods, as those methods are invoked both in the "normal"
 app domain and the "test" app domain:
 
-````
-#!csharp
+````csharp
 [SetUp]
 public void Setup()
 {
@@ -73,8 +72,7 @@ public void Setup()
 Use `AppDomainRunner.DataStore` as a way of passing data back and forth between the "normal" app domain and the "test" app domain:
 
 
-````
-#!csharp
+````csharp
 internal class TestContextTests
 {
   [SetUp]
@@ -129,8 +127,7 @@ There are a couple things that you should know about the way the tests run:
 
 If you need to block via some other mechnism (for example using a `Dispatcher`, or pumping some sort of message thread) you can implement `IAsyncTestResultHandler` on your test class and then block using your own mechnism:
 
-```
-#!csharp
+```csharp
 [Test]
 public async Task WaitsForDispatcherToContinue()
 {
