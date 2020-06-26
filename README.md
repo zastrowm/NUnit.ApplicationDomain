@@ -1,4 +1,4 @@
-[![NuGet](https://img.shields.io/nuget/v/NUnit.ApplicationDomain.svg)](NUnit.ApplicationDomain)
+[![NuGet](https://img.shields.io/nuget/v/NUnit.ApplicationDomain.svg)](https://www.nuget.org/packages/NUnit.ApplicationDomain)
 
 ````bash
 PM> Install-Package NUnit.ApplicationDomain
@@ -8,6 +8,7 @@ PM> Install-Package NUnit.ApplicationDomain
 
 [bitbucket]: https://bitbucket.org/zastrowm/nunit.applicationdomain_bitbucket
 [github]: https://github.com/zastrowm/NUnit.ApplicationDomain
+[nuget]: https://www.nuget.org/packages/NUnit.ApplicationDomain
 
 # Introduction
 
