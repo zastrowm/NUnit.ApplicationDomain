@@ -163,4 +163,4 @@ void IAsyncTestResultHandler.Process(Task task)
 }
 ```
 
-Full test/example is [implemented as a test](https://bitbucket.org/zastrowm/nunit.applicationdomain/src/master/test/NUnit.ApplicationDomain.Tests/AsyncTestWithDispatcherRunner.cs?fileviewer=file-view-default).
+Full test/example is [implemented as a test](test/NUnit.ApplicationDomain.Tests/AsyncTestWithDispatcherRunner.cs).
