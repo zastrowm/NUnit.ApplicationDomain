@@ -22,7 +22,7 @@ First, include the `NUnit.ApplicationDomain` nuget package.  Then decorate your 
 
 ** *Important Note* **
 
-If you're not using the same version of NUnit as the library expects (3.7.0) you need to apply a binding redirect via `app.config` to your test library.  If you do not, test runners may report 0 test executions.
+If you're not using the same version of NUnit as the library expects (3.13.2) you need to apply a binding redirect via `app.config` to your test library.  If you do not, test runners may report 0 test executions.
 
 Example `app.config`:
 
@@ -34,7 +34,7 @@ Example `app.config`:
       <dependentAssembly>
         <assemblyIdentity name="nunit.framework"
                           publicKeyToken="2638cd05610744eb"/>
-        <bindingRedirect oldVersion="3.7.0.0" newVersion="3.12.0.0" />
+        <bindingRedirect oldVersion="3.7.0.0" newVersion="3.13.2" />
       </dependentAssembly>
     </assemblyBinding>
   </runtime>

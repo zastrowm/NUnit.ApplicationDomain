@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>NUnit.ApplicationDomain</id>
-        <version>11.1.0</version>
+        <version>12.0.0+NUnit-3.13.2</version>
         <title>NUnit Application Domain Runner</title>
         <authors>Mackenzie Zastrow</authors>
         <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
@@ -10,9 +10,12 @@
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
         <description>Run NUnit tests in a separate application domain.</description>
         <summary>Allows running NUnit tests in a separate application domain.</summary>
-        <copyright>2017 - 2018 Mackenzie Zastrow</copyright>
+        <copyright>2017 - 2021 Mackenzie Zastrow</copyright>
         <tags>nunit, appdomain</tags>
         <releaseNotes>
+          ## Version 12.0.0+NUnit-3.13.2
+          - Upgrade to NUnit-3.13.2 as dependency version
+
           ## Version 11.1.0
           - Fix: Add broader support for newer versions of NUnit (Brandon Ording)
 
